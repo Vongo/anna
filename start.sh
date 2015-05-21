@@ -1,4 +1,4 @@
 #!/bin/sh
 
-./redis-stable/src/redis-server &
-python ./app.py
+./src/web/redis-stable/src/redis-server &
+python ./src/web/app.py
