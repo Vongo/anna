@@ -1,0 +1,44 @@
+library(shiny)
+shinyUI(
+	fluidPage(
+		titlePanel("ANNA"),
+		sidebarLayout(
+			position="left",
+			mainPanel(
+				tabsetPanel(
+					id="tabs",
+					tabPanel(
+						title="User Detail",
+						fluidRow(
+							column(2,
+								textInput("userName","")
+							),
+							column(1,
+								actionButton("validateUserName", "Ok !")
+							)
+						)
+					),
+					tabPanel(
+						title="Chat",
+						fluidRow(
+							column(5,
+								htmlOutput("history")
+							)
+						),
+						fluidRow(
+							column(4,
+								textInput("userInput","")
+							),
+							column(1,
+								actionButton("userSpoke", "Speak")
+							)
+						)
+					)
+				)
+			),
+			sidebarPanel(
+				uiOutput("temp")
+			)
+		)
+	)
+)
