@@ -55,3 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# MovieDiC xml source
+/src/movies-categorization/source/*.xml
