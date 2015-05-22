@@ -10,11 +10,23 @@ shinyServer(function(input, output, session) {
 	USER_NAME = NULL
 	userNameSet = F
 	newLineReady = F
+	firstChatLoad = T
+
+	formulate <- function(user, quote) {
+		paste("<b>",as.character(Sys.time()),", ",user," said</b> : ",quote, sep="")
+	}
 
 	anna.answers <- function() {
 		python.load(PYTHON_ANSWER_PATH)
 		answer <- sample(python.get("answer"),1)
-		newLine <- paste(as.character(Sys.time()),"ANNA said :",answer)
+		newLine <- formulate("ANNA", answer)
+		HISTORY <<- c(HISTORY, newLine)
+	}
+
+	anna.says.hi <- function() {
+		python.load(PYTHON_ANSWER_PATH)
+		answer <- sample(python.get("hi"),1)
+		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}
 
@@ -42,16 +54,15 @@ shinyServer(function(input, output, session) {
 	})
 
 	output$temp <- renderUI({
-		print(getwd())
 		categories <- fromJSON(file=CATEGORIES_PATH)
 		selectInput("categories","Categories",names(categories))
 	})
 
 	output$history <- renderUI({
-		if (input$userSpoke == 0)
-			return()
-		if (newLineReady) {
-			newLine <- paste(as.character(Sys.time()),USER_NAME,"said :",input$userInput)
+		if (input$userSpoke == 0){
+			anna.says.hi()
+		} else if (newLineReady) {
+			newLine <- formulate(USER_NAME, input$userInput)
 			HISTORY <<- c(HISTORY, newLine)
 			anna.answers()
 			newLineReady <<- F

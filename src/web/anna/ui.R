@@ -21,7 +21,7 @@ shinyUI(
 					tabPanel(
 						title="Chat",
 						fluidRow(
-							column(5,
+							column(8,
 								htmlOutput("history")
 							)
 						),
