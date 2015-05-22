@@ -1,15 +1,8 @@
 library(rPython)
 library(rjson)
 
-PYTHON_ANSWER_PATH = "../test.py"
-CATEGORIES_PATH = "src/movies-categorization/outputs/categories.json"
-
-anna.answers <- function() {
-	python.load(PYTHON_ANSWER_PATH)
-	answer <- python.get("answer")
-	newLine <- paste(as.character(Sys.time()),"ANNA said :",answer)
-	HISTORY <<- c(HISTORY, newLine)
-}
+PYTHON_ANSWER_PATH = "../../talk/test.py"
+CATEGORIES_PATH = "../../movies-categorization/outputs/categories.json"
 
 shinyServer(function(input, output, session) {
 
@@ -17,6 +10,13 @@ shinyServer(function(input, output, session) {
 	USER_NAME = NULL
 	userNameSet = F
 	newLineReady = F
+
+	anna.answers <- function() {
+		python.load(PYTHON_ANSWER_PATH)
+		answer <- sample(python.get("answer"),1)
+		newLine <- paste(as.character(Sys.time()),"ANNA said :",answer)
+		HISTORY <<- c(HISTORY, newLine)
+	}
 
 	observe({
 		if (input$validateUserName == 0)
@@ -42,6 +42,7 @@ shinyServer(function(input, output, session) {
 	})
 
 	output$temp <- renderUI({
+		print(getwd())
 		categories <- fromJSON(file=CATEGORIES_PATH)
 		selectInput("categories","Categories",names(categories))
 	})
@@ -52,7 +53,7 @@ shinyServer(function(input, output, session) {
 		if (newLineReady) {
 			newLine <- paste(as.character(Sys.time()),USER_NAME,"said :",input$userInput)
 			HISTORY <<- c(HISTORY, newLine)
-			# anna.answers()
+			anna.answers()
 			newLineReady <<- F
 		}
 		HTML(paste(HISTORY, collapse="<br/>"))
