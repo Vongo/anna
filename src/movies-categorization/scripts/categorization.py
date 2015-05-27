@@ -80,10 +80,6 @@ def categorize_movies():
 		if jsonResponse['Response'] == "True":
 			for genre in jsonResponse['Genre'].split(', '):
 				current_id_genre = genres[genre]
-				# print title, id_movie, genre, current_id_genre
-				# currentGenre = allCategories[current_id_genre]
-				# currentGenre.append(id_movie)
-				# print currentGenre
 				id_genres.append(current_id_genre)
 				allCategories[current_id_genre].append(id_movie)
 		else:
