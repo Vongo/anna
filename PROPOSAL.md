@@ -14,7 +14,7 @@ The categorization would be achieved with the help of the OMDb API (see here : h
 
 Should the user not pick a category, we'd like to infere one from the mood of the dialogue history. This will be useful to keep the dialogue consistant.
 
-## Learning
+## Learning
 Depending on time, we plan to add a Machine Learning component which might give Anna the ability to learn from her mistakes. An "evaluation" mode would be available for the user, in which he could rank each of Anna's answers. This evaluation would be then used to enhance Anna's ability to choose a proper answer.
 
 ## User Interface
