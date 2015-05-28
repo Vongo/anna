@@ -12,5 +12,7 @@ Our dataset is called *MovieDiC*. It's a XML file which contains ~700 movies' sc
 This is a funny option we want to add : the user will be able to select one category (Action, Drama, Mystery, ...) and will get responses pulled out such movies. The "All" option will also be available meaning that all movies should be considered.
 The categorization would be achieved with the help of the OMDb API (see here : http://www.omdbapi.com/).
 
+Should the user not pick a category, we'd like to infere one from the mood of the dialogue history. This will be useful to keep the dialogue consistant.
+
 ## User Interface
-UI is definitely not this project's core so we'll keep it as simple as possible. (readable tho)
+UI is definitely not the core of this project, so we'll keep it as simple as possible. (readable though)
