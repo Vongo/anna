@@ -58,3 +58,11 @@ target/
 
 # MovieDiC xml source
 /src/movies-categorization/source/*.xml
+
+# LaTeX
+/tex/*.aux
+/tex/*.log
+/tex/*.dvi
+/tex/*.gz
+/tex/*.toc
+/tex/*.pdf
