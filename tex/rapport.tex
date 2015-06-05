@@ -1,0 +1,65 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{color, graphicx, textcomp, fancyhdr}
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,vmargin=3cm}
+
+
+\title{Text Minig Project}
+\author{Mael Ogier - Adrian Delmarre}
+
+\begin{document}
+
+\thispagestyle{empty}
+\newpage
+
+
+\begin{center}
+\includegraphics[width=7cm]{Logo_INSA_Lyon_2014.png} \includegraphics[width=7cm]{logoPassau.png} \\
+
+\vspace{6cm}
+
+{\fontseries{b} \fontsize{29pt}{0} \selectfont%
+Final report
+}
+\vspace{2cm}
+
+{\fontseries{b} \fontsize{18.0pt}{0} \selectfont
+Anna - The movies-based chatbot
+}
+
+\vspace{8cm}
+
+{\fontsize{13pt}{12} \selectfont%
+\begin{tabular}{lcl}
+
+Author :&& Mael Ogier - Adrian Delmarre\\[1ex]
+Supervisor :&& Behrang Qasemizadeh\\[1ex]
+
+Institutions :&& INSA Lyon - Universität Passau\\[1ex]
+Date : && \today
+\end{tabular}
+}
+
+\end{center}
+\clearpage
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{\includegraphics[scale=0.4]{logoPassau.png}}
+\cfoot{\thepage}
+\rfoot{\includegraphics[scale=0.2]{Logo_INSA_Lyon_2014.png}}
+\renewcommand\headrulewidth{0pt}
+\renewcommand\footrulewidth{0pt}
+
+\renewcommand{\contentsname}{Summary}
+\tableofcontents
+
+%-------------- include content -------------
+\include{abstract}
+\include{motivations}
+\include{dm_structure}
+\end{document}
