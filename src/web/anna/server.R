@@ -2,7 +2,7 @@ library(rPython)
 library(rjson)
 
 PYTHON_ANSWER_PATH = "../../talk/test.py"
-CATEGORIES_PATH = "../../movies-categorization/outputs/categories.json"
+CATEGORIES_PATH = "../../pre-processing/movies-categorization/outputs/categories.json"
 
 shinyServer(function(input, output, session) {
 
@@ -68,5 +68,15 @@ shinyServer(function(input, output, session) {
 			newLineReady <<- F
 		}
 		HTML(paste(HISTORY, collapse="<br/>"))
+	})
+
+	output$evaluation <- renderUI({
+		input$userSpoke
+		sliderInput("eval", "How would you evaluate Anna's last answer ?", 0, 5, 0, step = 1)
+	})
+
+	output$input <- renderUI({
+		input$userSpoke
+		textInput("userInput","")
 	})
 })

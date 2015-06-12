@@ -27,10 +27,13 @@ shinyUI(
 						),
 						fluidRow(
 							column(4,
-								textInput("userInput","")
+								htmlOutput("input")
 							),
 							column(1,
 								actionButton("userSpoke", "Speak")
+							),
+							column(5,
+								htmlOutput("evaluation")
 							)
 						)
 					)
