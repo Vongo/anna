@@ -40,8 +40,7 @@ try:
 	create_categories_nodes(graph)
 	create_sentence_types(graph)
 except:
-	server.stop()
 	raise
-else:
+finally:
 	server.stop()
 
