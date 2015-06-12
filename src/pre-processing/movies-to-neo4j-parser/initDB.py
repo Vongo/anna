@@ -21,10 +21,27 @@ def create_categories_nodes(graph):
 			cat = Node("Category", label=label)
 			graph.create(cat)
 
+def create_sentence_types(graph):
+	# Interrogative
+	inter = Node("SentenceType", label="interrogative")
+	graph.create(inter)
+	# Exclamation
+	excl = Node("SentenceType", label="exclamation")
+	graph.create(excl)
+	# Affirmative
+	aff = Node("SentenceType", label="affirmative")
+
+
 server = GraphServer("../../../neo4j-2.2.0")
 server.start()
 graph=server.graph
-create_constraints(graph.schema)
-create_categories_nodes(graph)
-server.stop()
+try:
+	create_constraints(graph.schema)
+	create_categories_nodes(graph)
+	create_sentence_types(graph)
+except:
+	server.stop()
+	raise
+else:
+	server.stop()
 
