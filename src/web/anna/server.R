@@ -3,6 +3,7 @@ library(rjson)
 
 PYTHON_ANSWER_PATH = "../../talk/test.py"
 CATEGORIES_PATH = "../../pre-processing/movies-categorization/outputs/categories.json"
+TESTMODE = NULL
 
 shinyServer(function(input, output, session) {
 
@@ -53,6 +54,15 @@ shinyServer(function(input, output, session) {
 		}
 	})
 
+	observe({
+		switch(input$testMode,
+			"1" = {TESTMODE <<- T},
+			"2" = {TESTMODE <<- F},
+			{print("TestMode not set.")}
+		)
+
+	})
+
 	output$temp <- renderUI({
 		categories <- fromJSON(file=CATEGORIES_PATH)
 		selectInput("categories","Categories",names(categories))
@@ -72,7 +82,8 @@ shinyServer(function(input, output, session) {
 
 	output$evaluation <- renderUI({
 		input$userSpoke
-		sliderInput("eval", "How would you evaluate Anna's last answer ?", 0, 5, 0, step = 1)
+		if (TESTMODE)
+			sliderInput("eval", "How would you evaluate Anna's last answer ?", 0, 5, 3, step = 1)
 	})
 
 	output$input <- renderUI({

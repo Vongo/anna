@@ -1,7 +1,7 @@
 # PROJECT PROPOSAL - Anna
 
 ## Final aim
-We want to create a chat bot based on movies punchlines. The main work will be to analyse the input text (user's sentence) and select the appropriate response given the history of the dialogue and the chosen categorie (see next section).
+We want to create a chat bot based on movies punchlines. The main work will be to analyze the input text (user's sentence) and select the appropriate answer given the history of the dialogue and the chosen category (see next section).
 
 ## Source
 Our dataset is called *MovieDiC*. It's a XML file which contains ~700 movies' scripts detailing who is speaking and the context of this talk.
@@ -28,10 +28,10 @@ Our dataset is called *MovieDiC*. It's a XML file which contains ~700 movies' sc
 	</movies>
 ```
 ## Categories
-This is a funny option we want to add : the user will be able to select one category (Action, Drama, Mystery, ...) and will get responses pulled out such movies. The "All" option will also be available meaning that all movies should be considered.
+This is a funny option we want to add : the user will be able to select one category (Action, Drama, Mystery, ...) and will get answers pulled out such movies. The "All" option will also be available meaning that all movies should be considered.
 The categorization would be achieved with the help of the OMDb API (see here : http://www.omdbapi.com/).
 
-Should the user not pick a category, we'd like to infere one from the mood of the dialogue history. This will be useful to keep the dialogue consistant.
+Should the user not pick a category, we'd like to infer one from the mood of the dialogue history. This will be useful to keep the dialogue consistent.
 
 ## Learning
 Depending on time, we plan to add a Machine Learning component which might give Anna the ability to learn from her mistakes. An "evaluation" mode would be available for the user, in which he could rank each of Anna's answers. This evaluation would be then used to enhance Anna's ability to choose a proper answer.
