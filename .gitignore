@@ -57,7 +57,7 @@ docs/_build/
 target/
 
 # MovieDiC xml source
-/src/pre-processing/movies-categorization/source/*.xml
+/data/*.xml
 
 # LaTeX
 /tex/*.aux
