@@ -68,4 +68,4 @@ target/
 /tex/*.pdf
 
 # Neo4jDB
-/neo4j-2.2.0/*
+/neo4j/*

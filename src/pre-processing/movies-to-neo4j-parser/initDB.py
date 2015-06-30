@@ -30,9 +30,10 @@ def create_sentence_types(graph):
 	graph.create(excl)
 	# Affirmative
 	aff = Node("SentenceType", label="affirmative")
+	graph.create(aff)
 
 
-server = GraphServer("../../../neo4j-2.2.0")
+server = GraphServer("../../../neo4j")
 server.start()
 graph=server.graph
 try:
