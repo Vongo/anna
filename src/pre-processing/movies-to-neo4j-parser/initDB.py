@@ -89,15 +89,20 @@ def parseMoviesXML(graph):
                 sentence_is_spoken_by = Relationship(currentSentence,"IS_SPOKEN_BY", currentSpeaker)
                 graph.create_unique(sentence_is_spoken_by)
 
+def init_histo(graph):
+	histo = Node("Histo", label="histo")
+	graph.create(histo)
+
 
 server = GraphServer("../../../neo4j")
 server.start()
 graph=server.graph
 try:
-    create_constraints(graph.schema)
-    create_categories_nodes(graph)
-    create_sentence_types(graph)
-    parseMoviesXML(graph)
+	create_constraints(graph.schema)
+	create_categories_nodes(graph)
+	create_sentence_types(graph)
+	parseMoviesXML(graph)
+	init_histo(graph)
 except:
     raise
 finally:
