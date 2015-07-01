@@ -1,7 +1,9 @@
 library(rPython)
 library(rjson)
 
-PYTHON_ANSWER_PATH = "../../talk/test.py"
+PYTHON_ANSWER_DIR = "../../talk"
+PYTHON_ANSWER_PATH = paste(PYTHON_ANSWER_DIR,"/answer.py",sep="")
+API_PATH = "../../talk/API.R"
 CATEGORIES_PATH = "../../pre-processing/movies-categorization/outputs/categories.json"
 TESTMODE = NULL
 
@@ -17,15 +19,18 @@ shinyServer(function(input, output, session) {
 		paste("<b>",as.character(Sys.time()),", ",user," said</b> : ",quote, sep="")
 	}
 
-	anna.answers <- function() {
-		python.load(PYTHON_ANSWER_PATH)
-		answer <- sample(python.get("answer"),1)
+	anna.answers <- function(userLine, history=NULL) {
+		# python.load(PYTHON_ANSWER_PATH)
+		# answer <- sample(python.get("answer"),1)
+
+		answer <- source(API_PATH,chdir=T)$value(userLine,"",input$categories)
+
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}
 
 	anna.says.hi <- function() {
-		python.load(PYTHON_ANSWER_PATH)
+		python.load(PYTHON_ANSWER_DIR)
 		answer <- sample(python.get("hi"),1)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
@@ -74,7 +79,7 @@ shinyServer(function(input, output, session) {
 		} else if (newLineReady) {
 			newLine <- formulate(USER_NAME, input$userInput)
 			HISTORY <<- c(HISTORY, newLine)
-			anna.answers()
+			anna.answers(input$userInput)
 			newLineReady <<- F
 		}
 		HTML(paste(HISTORY, collapse="<br/>"))
