@@ -21,7 +21,7 @@ def create_constraints(schema):
     schema.create_index("Character","full_name")
 
 def create_categories_nodes(graph):
-    with open('../movies-categorization/outputs/categories.json') as data_file:    
+    with open('../movies-categorization/outputs/categories.json') as data_file:
         data = json.load(data_file)
         for label in data.keys():
             cat = Node("Category", label=label)
@@ -39,14 +39,15 @@ def create_sentence_types(graph):
     graph.create(aff)
 
 def parseMoviesXML(graph):
-    tree = ET.parse('../../../data/1movie.xml')
+    tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
         # Create movie Node and link it to its categories
         title = movie.get('title')
-        currentMovie = graph.find_one("Movie", 
-                property_key="title", 
+        print "  Parsing movie : " + title + " ..."
+        currentMovie = graph.find_one("Movie",
+                property_key="title",
                 property_value = title)
         if currentMovie is None :
             currentMovie = Node("Movie", title=title)
@@ -56,8 +57,8 @@ def parseMoviesXML(graph):
 
         # Create dialogues
         for dialogue in movie.findall('dialogue'):
-            currentDial = graph.find_one("Dialogue", 
-                    property_key="id", 
+            currentDial = graph.find_one("Dialogue",
+                    property_key="id",
                     property_value = movie.get('id')+"_"+dialogue.get('id'))
             if currentDial is None :
                 currentDial = Node("Dialogue", id=movie.get('id')+"_"+dialogue.get('id'), n_utterances=dialogue.get('n_utterances'))
@@ -65,8 +66,8 @@ def parseMoviesXML(graph):
             graph.create_unique(movie_is_composed_of)
             # Sentences
             for i in range(0, int(dialogue.get('n_utterances'))):
-                currentSentence = graph.find_one("Sentence", 
-                    property_key="id", 
+                currentSentence = graph.find_one("Sentence",
+                    property_key="id",
                     property_value = movie.get('id')+"_"+dialogue.get('id')+"_"+str(i))
                 if currentSentence is None :
                     currentSentence = Node("Sentence", id=movie.get('id')+"_"+dialogue.get('id')+"_"+str(i), full_sentence=dialogue[3+(4*i)].text)
@@ -76,8 +77,8 @@ def parseMoviesXML(graph):
                 if dialogue[4*i].text in speakers:
                     currentSpeaker = speakers[dialogue[4*i].text]
                 else:
-                    potSpeakers = graph.find("Character", 
-                        property_key="full_name", 
+                    potSpeakers = graph.find("Character",
+                        property_key="full_name",
                         property_value = dialogue[4*i].text)
                     currentSpeaker = None
                     for speaker in potSpeakers:
@@ -88,18 +89,29 @@ def parseMoviesXML(graph):
                     speakers[dialogue[4*i].text] = currentSpeaker
                 sentence_is_spoken_by = Relationship(currentSentence,"IS_SPOKEN_BY", currentSpeaker)
                 graph.create_unique(sentence_is_spoken_by)
-
+        print "  Done."
 
 server = GraphServer("../../../neo4j")
+server.stop()
+print "Starting Neo4j server..."
 server.start()
+print "Done."
 graph=server.graph
 try:
+    print "Creating constraints..."
     create_constraints(graph.schema)
+    print "Done."
+    print "Creating categories nodes..."
     create_categories_nodes(graph)
+    print "Done."
+    print "Creating sentences types..."
     create_sentence_types(graph)
+    print "Done."
+    print "Parsing Movies XML..."
     parseMoviesXML(graph)
+    print "Done."
 except:
     raise
 finally:
     server.stop()
-
+    print "Job all done. See you later."
