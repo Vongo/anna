@@ -91,6 +91,11 @@ def parseMoviesXML(graph):
                 graph.create_unique(sentence_is_spoken_by)
         print "  Done."
 
+
+def init_histo(graph):
+	histo = Node("Histo", label="histo")
+	graph.create(histo)
+
 server = GraphServer("../../../neo4j")
 server.stop()
 print "Starting Neo4j server..."
@@ -109,6 +114,9 @@ try:
     print "Done."
     print "Parsing Movies XML..."
     parseMoviesXML(graph)
+    print "Done."
+    print "Initing histo..."
+	init_histo(graph)
     print "Done."
 except:
     raise
