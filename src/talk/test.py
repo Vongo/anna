@@ -1,3 +1,3 @@
+#!/usr/bin/python
 
-answer = ["Il s'appelle Robert Paulson","Choucroute","Tartiflette","Ta gueule."]
-hi = ["Bonjour bel inconnu","Je ne veux pas te parler","Ja ja ja choucroute"]
+hi = ["I am here to serve you","Be my guest","How do you do ?","Hey you","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi"]
