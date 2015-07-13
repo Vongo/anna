@@ -30,7 +30,7 @@ shinyServer(function(input, output, session) {
 	}
 
 	anna.says.hi <- function() {
-		python.load(PYTHON_ANSWER_DIR)
+		python.load(paste(PYTHON_ANSWER_DIR,"/test.py",sep=""))
 		answer <- sample(python.get("hi"),1)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
