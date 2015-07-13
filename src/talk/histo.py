@@ -13,12 +13,12 @@ def getTokensAndType(sentence):
 			tokens.append(tag[0])
 
 	sentenceType = []
-	if '?' in allTokens:
-		sentenceType.append('Interrogative')
-	elif '!' in allTokens:
-		sentenceType.append('Exclamative')
+	if '?' == allTokens[-1]:
+		sentenceType.append('interrogative')
+	elif '!' == allTokens[-1]:
+		sentenceType.append('exclamation')
 	else:
-		sentenceType.append('Declarative')
+		sentenceType.append('affirmative')
 
 	if "n't" in allTokens:
 		sentenceType.append('Negative')

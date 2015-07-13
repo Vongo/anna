@@ -3,6 +3,9 @@ from py2neo.server import GraphServer
 from utils import *
 import json
 import xml.etree.ElementTree as ET
+import sys
+sys.path.insert(0, '../../talk')
+import histo
 
 def create_constraints(schema):
     # Movies
@@ -39,7 +42,7 @@ def create_sentence_types(graph):
     graph.create(aff)
 
 def parseMoviesXML(graph):
-    tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
+    tree = ET.parse('../movies-categorization/source/3movies.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
@@ -89,6 +92,19 @@ def parseMoviesXML(graph):
                     speakers[dialogue[4*i].text] = currentSpeaker
                 sentence_is_spoken_by = Relationship(currentSentence,"IS_SPOKEN_BY", currentSpeaker)
                 graph.create_unique(sentence_is_spoken_by)
+
+                #create tokens and sentence type
+                tokensAndType = histo.getTokensAndType(currentSentence.properties["full_sentence"])
+
+                sentenceType = graph.find_one("SentenceType", property_key='label', property_value=tokensAndType[1][0])
+                is_of_type = Relationship(currentSentence, "is_of_type", sentenceType)
+                graph.create_unique(is_of_type)
+
+                for token in tokensAndType[0]:
+                    token = Node("Token", token=token)
+                    is_composed_of = Relationship(currentSentence, "is_composed_of", token)
+                    graph.create_unique(is_composed_of)
+
         print "  Done."
 
 
@@ -116,7 +132,7 @@ try:
     parseMoviesXML(graph)
     print "Done."
     print "Initing histo..."
-	init_histo(graph)
+    init_histo(graph)
     print "Done."
 except:
     raise
