@@ -21,8 +21,8 @@ def getTokensAndType(sentence):
 		sentenceType.append('affirmative')
 
 	if "n't" in allTokens:
-		sentenceType.append('Negative')
+		sentenceType.append('negative')
 	else:
-		sentenceType.append('Positive')
+		sentenceType.append('positive')
 
 	return tokens, sentenceType;

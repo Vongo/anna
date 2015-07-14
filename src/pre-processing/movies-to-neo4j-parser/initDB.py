@@ -40,9 +40,16 @@ def create_sentence_types(graph):
     # Affirmative
     aff = Node("SentenceType", label="affirmative")
     graph.create(aff)
+    # Negative
+    neg = Node("SentenceType", label="negative")
+    graph.create(neg)
+    # Positive
+    pos = Node("SentenceType", label="positive")
+    graph.create(pos)
 
 def parseMoviesXML(graph):
-    tree = ET.parse('../movies-categorization/source/3movies.xml')
+    #tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
+    tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
@@ -96,9 +103,10 @@ def parseMoviesXML(graph):
                 #create tokens and sentence type
                 tokensAndType = histo.getTokensAndType(currentSentence.properties["full_sentence"])
 
-                sentenceType = graph.find_one("SentenceType", property_key='label', property_value=tokensAndType[1][0])
-                is_of_type = Relationship(currentSentence, "is_of_type", sentenceType)
-                graph.create_unique(is_of_type)
+                for t in xrange(0, len(tokensAndType[1])):
+                    sentenceType = graph.find_one("SentenceType", property_key='label', property_value=tokensAndType[1][t])
+                    is_of_type = Relationship(currentSentence, "is_of_type", sentenceType)
+                    graph.create_unique(is_of_type)
 
                 for token in tokensAndType[0]:
                     token = Node("Token", token=token)
