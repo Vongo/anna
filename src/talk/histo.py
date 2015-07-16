@@ -3,7 +3,7 @@ import sys;
 import db;
 
 def getTokensAndType(sentence):
-
+	print "In histo"
 	allTokens = nltk.word_tokenize(sentence)
 	tagged = nltk.pos_tag(allTokens)
 
@@ -24,5 +24,10 @@ def getTokensAndType(sentence):
 		sentenceType.append('negative')
 	else:
 		sentenceType.append('positive')
+
+	greetingsWords = ['Hi', 'hi', 'HI' ,'Hello','hello', 'HELLO','Hey', 'hey', 'HEY','Good morning', 'good morning', 'GOOD MORNING', 'Good afternoon', 'good afternoon', 'GOOD AFTERNOON', 'Good evening', 'good evening', 'GOOD EVENING']
+	greet = [val for val in allTokens if val in greetingsWords]
+	if greet:
+		sentenceType.append('greeting')
 
 	return tokens, sentenceType;
