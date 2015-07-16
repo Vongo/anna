@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 import sys
 sys.path.insert(0, '../../talk')
 import histo
+sys.path.insert(0, '../')
+import buildStats
 
 def create_constraints(schema):
     # Movies
