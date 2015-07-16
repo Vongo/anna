@@ -20,8 +20,8 @@ shinyUI(
 						fluidRow(
 							column(3,
 								radioButtons("testMode", label = h3("Test Mode"),
-        							choices = list("I want to evaluate Anna's answers" = 1, 
-        							"I just want to interact" = 2), 
+        							choices = list("I want to evaluate Anna's answers" = 1,
+        							"I just want to interact" = 2),
         							selected = 2
         						)
 							)
@@ -46,6 +46,11 @@ shinyUI(
 							),
 							column(5,
 								htmlOutput("evaluation")
+							)
+						),
+						fluidRow(
+							column(3,
+								actionButton("Disconnect", "Disconnect")
 							)
 						)
 					)
