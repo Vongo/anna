@@ -3,7 +3,7 @@ import sys;
 import db;
 
 def getTokensAndType(sentence):
-
+	print "In histo"
 	allTokens = nltk.word_tokenize(sentence)
 	tagged = nltk.pos_tag(allTokens)
 
