@@ -48,8 +48,8 @@ def create_sentence_types(graph):
     graph.create(pos)
 
 def parseMoviesXML(graph):
-    #tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
-    tree = ET.parse('../../../data/1movie.xml')
+    tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
+    #tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
