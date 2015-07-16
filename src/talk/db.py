@@ -5,8 +5,8 @@ HISTO_LENGTH = 5
 
 def insert(sentence, tokensAndType):
 	server = GraphServer("../../../neo4j")
-	
-	graph=server.graph
+
+	graph = server.graph
 
 	sentences = list(graph.find("Sentence"))
 	numberOfSentences = len(sentences)
@@ -38,12 +38,11 @@ def insert(sentence, tokensAndType):
 	else:
 		is_followed_by = Relationship(sentences[-1], "is_followed_by", sentence)
 		graph.create(is_followed_by)
-		
+
 
 	for token in tokensAndType[0]:
 		token = Node("Token", token=token)
 		is_composed_of = Relationship(sentence, "is_composed_of", token)
 		graph.create(is_composed_of)
 
-	server.stop()
 	print "fin db"

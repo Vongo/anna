@@ -3,6 +3,8 @@ library(rjson)
 
 PYTHON_ANSWER_DIR = "../../talk"
 PYTHON_ANSWER_PATH = paste(PYTHON_ANSWER_DIR,"/answer.py",sep="")
+CONNECT_PATH = "../../neoServer/connect.R"
+DISCONNECT_PATH = "../../neoServer/disconnect.R"
 API_PATH = "../../talk/API.R"
 CATEGORIES_PATH = "../../pre-processing/movies-categorization/outputs/categories.json"
 TESTMODE = NULL
@@ -14,6 +16,8 @@ shinyServer(function(input, output, session) {
 	userNameSet = F
 	newLineReady = F
 	firstChatLoad = T
+
+	source(CONNECT_PATH,chdir=T)$value()
 
 	formulate <- function(user, quote) {
 		paste("<b>",as.character(Sys.time()),", ",user," said</b> : ",quote, sep="")
