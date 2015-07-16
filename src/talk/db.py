@@ -4,9 +4,8 @@ from py2neo import Node,Relationship
 HISTO_LENGTH = 5
 
 def insert(sentence, tokensAndType):
-
-	server = GraphServer("../../neo4j")
-	server.start()
+	server = GraphServer("../../../neo4j")
+	
 	graph=server.graph
 
 	sentences = list(graph.find("Sentence"))
@@ -47,3 +46,4 @@ def insert(sentence, tokensAndType):
 		graph.create(is_composed_of)
 
 	server.stop()
+	print "fin db"

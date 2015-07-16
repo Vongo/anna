@@ -2,7 +2,11 @@
 
 from py2neo import Graph, Node, Relationship
 from py2neo.server import GraphServer
-import random
+import random, sys
+sys.path.insert(0, '../talk')
+sys.path.insert(0, '../../talk')
+import histo
+import db
 
 server = GraphServer("../../../neo4j")
 server.stop()
@@ -15,7 +19,10 @@ class AnswerEngineAPI(object):
         super(AnswerEngineAPI, self).__init__()
 
     def getAnnasAnswer(self, userLine, history, category):
-        return self.getRandomAnswer(userLine, category)
+        sentence = self.getRandomAnswer(userLine, category)
+        tokTypes = histo.getTokensAndType(sentence)
+        db.insert(sentence, tokTypes)
+        return sentence
 
     def getRandomAnswer(self, userLine, category):
         server = GraphServer("../../../neo4j")
@@ -34,8 +41,6 @@ class AnswerEngineAPI(object):
         except:
             act = "FAIL"
             raise
-        finally:
-            server.stop()
         return act
 
 def getAnswer(userLine, history, category):
