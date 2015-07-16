@@ -1,3 +1,4 @@
+from py2neo import Node, Relationship
 from py2neo.server import GraphServer
 
 def initStatsGraph(graph):
@@ -5,10 +6,8 @@ def initStatsGraph(graph):
 	stats = Node("Stats", label="Stats")
 	graph.create(stats)
 
-	has = Relationship()
-
 	greet = Node("SentenceStat", label="greetings")
-	has = Relationship(stats, 'has', stats)
+	has = Relationship(stats, 'has', greet)
 	graph.create(has)
 
 	intNeg = Node("SentenceStat", label="interrogative negative")
@@ -35,17 +34,20 @@ def initStatsGraph(graph):
 	has = Relationship(stats, 'has', affPos)
 	graph.create(has)
 
-# def buildStats(graph):
+def buildStats(graph):
 
-# 	for typeOfSentence in graph.find("SentenceStat"):
+	for typeOfSentence in graph.find("SentenceStat"):
 
-# 		sentences = graph.cypher.execute('MATCH -[r]-(n:Sentence)')
+		print typeOfSentence
+		if(typeOfSentence.properties["label"] == "greetings"):
+			typeSentence = graph.cypher.execute("MATCH (:SentenceType{label:'affirmative'})<--(:Sentence)<--(:Dialogue)<--(n:Sentence) RETURN n")
+			print typeSentence
+		# else:
+		# str1 = typeOfSentence
+		# str2 = typeOfSentence
+		# sentences = graph.cypher.execute('MATCH (n:)-[:is_of_type{label:""}]-() WHERE n. RETURN n')
 
 
-# 	pour chaque type de phrases retirer les phrases suivantes
-# 		attibuer proba à chaque type de phrase
-# 		insérer en base
-		
-server = GraphServer("../../../neo4j")
+server = GraphServer("../../neo4j")
 graph=server.graph
-initStatsGraph(graph)
+buildStats(graph)

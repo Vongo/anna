@@ -54,7 +54,7 @@ def create_sentence_types(graph):
 
 def parseMoviesXML(graph):
     #tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
-    tree = ET.parse('../../../data/1movie.xml')
+    tree = ET.parse('../movies-categorization/source/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
@@ -146,6 +146,9 @@ try:
     print "Done."
     print "Initing histo..."
     init_histo(graph)
+    print "Done."
+    print "Initing Stats..."
+    buildStats.initStatsGraph(graph)
     print "Done."
 except:
     raise
