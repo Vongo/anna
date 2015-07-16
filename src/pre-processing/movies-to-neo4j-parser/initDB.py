@@ -46,6 +46,9 @@ def create_sentence_types(graph):
     # Positive
     pos = Node("SentenceType", label="positive")
     graph.create(pos)
+    # Greeting
+    greet = Node("SentenceType", label="greeting")
+    graph.create(greet)
 
 def parseMoviesXML(graph):
     #tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
