@@ -18,7 +18,7 @@ class AnswerEngineAPI(object):
     def getAnnasAnswer(self, userLine, history, category):
         sentence = self.getRandomAnswer(userLine, category)
         tokTypes = histo.getTokensAndType(sentence)
-        #db.insert(sentence, tokTypes) #timeout
+        db.insert(sentence, tokTypes) #timeout
         return sentence
 
     def getRandomAnswer(self, userLine, category):

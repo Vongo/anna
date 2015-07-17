@@ -85,7 +85,7 @@ def parseMoviesXML(graph):
                     property_key="id",
                     property_value = movie.get('id')+"_"+dialogue.get('id')+"_"+str(i))
                 if currentSentence is None :
-                    currentSentence = Node("Sentence", id=movie.get('id')+"_"+dialogue.get('id')+"_"+str(i), full_sentence=dialogue[3+(4*i)].text)
+                    currentSentence = Node("Sentence", id=movie.get('id')+"_"+dialogue.get('id')+"_"+str(i), full_sentence=dialogue[3+(4*i)].text, order=i)
                 dial_is_composed_of = Relationship(currentDial,"IS_COMPOSED_OF", currentSentence)
                 graph.create_unique(dial_is_composed_of)
                 # Speaker

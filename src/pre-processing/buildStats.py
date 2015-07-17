@@ -34,20 +34,14 @@ def initStatsGraph(graph):
 	has = Relationship(stats, 'has', affPos)
 	graph.create(has)
 
-def buildStats(graph):
+# def buildStats(graph):
+# 	print 'aight'
 
-	for typeOfSentence in graph.find("SentenceStat"):
+# 	typeSentences = graph.find('SentenceStat')
 
-		print typeOfSentence
-		if(typeOfSentence.properties["label"] == "greetings"):
-			typeSentence = graph.cypher.execute("MATCH (:SentenceType{label:'affirmative'})<--(:Sentence)<--(:Dialogue)<--(n:Sentence) RETURN n")
-			print typeSentence
-		# else:
-		# str1 = typeOfSentence
-		# str2 = typeOfSentence
-		# sentences = graph.cypher.execute('MATCH (n:)-[:is_of_type{label:""}]-() WHERE n. RETURN n')
+	
 
 
-server = GraphServer("../../neo4j")
-graph=server.graph
-buildStats(graph)
+# server = GraphServer("../../neo4j")
+# graph=server.graph
+# buildStats(graph)
