@@ -12,8 +12,14 @@ def insert(sentence, tokensAndType):
 	numberOfSentences = len(sentences)
 
 	sentence = Node("SentenceHisto", sentence=sentence)
-	sentenceType = Node("Type", type=tokensAndType[1][0], form=tokensAndType[1][1])
+	sentenceType = graph.find_one("SentenceType",
+                    property_key="label",
+                    property_value = tokensAndType[1][0])
+	sentenceForm = graph.find_one("SentenceType",
+                    property_key="label",
+                    property_value = tokensAndType[1][1])
 	is_of_type = Relationship(sentence, "is_of_type", sentenceType)
+	is_of_form = Relationship(sentence, "is_of_type", sentenceForm) # pos / neg
 	graph.create(is_of_type)
 
 	print numberOfSentences
