@@ -72,6 +72,13 @@ shinyServer(function(input, output, session) {
 
 	})
 
+	observe({
+		if (input$Disconnect == 0)
+			return()
+		source(DISCONNECT_PATH,chdir=T)$value()
+		Disconnecting(forceKill666) #This will raise an exception and crash the server. Who said "dirty" ?
+	})
+
 	output$temp <- renderUI({
 		categories <- fromJSON(file=CATEGORIES_PATH)
 		selectInput("categories","Categories",names(categories))

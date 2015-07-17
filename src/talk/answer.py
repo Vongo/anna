@@ -16,6 +16,8 @@ class AnswerEngineAPI(object):
         super(AnswerEngineAPI, self).__init__()
 
     def getAnnasAnswer(self, userLine, history, category):
+        tokTypesUser = histo.getTokensAndType(userLine)
+        db.insert(userLine, tokTypesUser) #timeout
         sentence = self.getRandomAnswer(userLine, category)
         tokTypes = histo.getTokensAndType(sentence)
         db.insert(sentence, tokTypes) #timeout
@@ -26,7 +28,7 @@ class AnswerEngineAPI(object):
         graph = server.graph
         act = None
         try:
-            movie = random.randint(1,700)
+            movie = random.randint(1,1)
             dialogue = random.randint(1,50)
             sen = random.randint(1,3)
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
