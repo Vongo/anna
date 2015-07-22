@@ -32,8 +32,8 @@ class AnswerEngineAPI(object):
             dialogue = random.randint(1,50)
             sen = random.randint(1,3)
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
-            act = str(graph.find_one("Sentence", property_key="id", property_value=id))
-            print act
+            act = graph.find_one("Sentence", property_key="id", property_value=id)
+            print act.properties["full_sentence"]
         except:
             act = "FAIL"
             raise

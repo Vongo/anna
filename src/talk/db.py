@@ -5,8 +5,7 @@ HISTO_LENGTH = 5
 
 def insert(sentence, tokensAndType):
 
-	server = GraphServer("../../neo4j")
-	server.start()
+	server = GraphServer("../../../neo4j")
 	graph=server.graph
 
 	sentences = list(graph.find("SentenceHisto"))
@@ -16,6 +15,7 @@ def insert(sentence, tokensAndType):
 	sentenceType = graph.find_one("SentenceType",
                     property_key="label",
                     property_value = tokensAndType[1][0])
+
 	sentenceForm = graph.find_one("SentenceType",
                     property_key="label",
                     property_value = tokensAndType[1][1])
@@ -31,7 +31,6 @@ def insert(sentence, tokensAndType):
 		has = Relationship(histo, "is_followed_by", sentence)
 		graph.create(has)
 	elif numberOfSentences == HISTO_LENGTH:
-
 		histo = graph.find_one("Histo",
 								property_key="label",
 								property_value = "histo")
@@ -46,10 +45,12 @@ def insert(sentence, tokensAndType):
 		is_followed_by = Relationship(sentences[-1], "is_followed_by", sentence)
 		graph.create(is_followed_by)
 		
-
 	for token in tokensAndType[0]:
-		token = Node("Token", token=token)
-		is_composed_of = Relationship(sentence, "is_composed_of", token)
+		tokenNode = graph.find_one("Token",
+							   property_key="token",
+							   property_value = token)
+		if tokenNode is None:
+			tokenNode = Node("Token", token=token)
+		
+		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
-
-	server.stop()
