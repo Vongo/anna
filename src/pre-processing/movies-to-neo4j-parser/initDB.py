@@ -8,6 +8,7 @@ sys.path.insert(0, '../../talk')
 import histo
 sys.path.insert(0, '../')
 import buildStats
+from py2neo.packages.httpstream import http
 
 def create_constraints(schema):
     # Movies
@@ -79,6 +80,7 @@ def parseMoviesXML(graph):
             movie_is_composed_of = Relationship(currentMovie,"IS_COMPOSED_OF", currentDial)
             graph.create_unique(movie_is_composed_of)
             # Sentences
+            last_sentence = None;
             for i in range(0, int(dialogue.get('n_utterances'))):
                 currentSentence = graph.find_one("Sentence",
                     property_key="id",
@@ -117,6 +119,11 @@ def parseMoviesXML(graph):
                     is_composed_of = Relationship(currentSentence, "is_composed_of", token)
                     graph.create_unique(is_composed_of)
 
+                if last_sentence != None:
+                    sentence_followed_by = Relationship(last_sentence, "sentence_followed_by", currentSentence)
+                    graph.create(sentence_followed_by)
+                last_sentence = currentSentence
+
         print "  Done."
 
 
@@ -148,7 +155,10 @@ try:
     print "Done."
     print "Initing Stats..."
     buildStats.initStatsGraph(graph)
-    print "Done."
+    print "Building Stats..."
+    http.socket_timeout = 9999
+    buildStats.buildStats(graph)
+    print "Stats Done."
 except:
     raise
 finally:
