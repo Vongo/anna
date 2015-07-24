@@ -32,9 +32,9 @@ def generate_clean_title(title):
         clean = clean.replace(" ll ", "'ll ")
     return clean
 
-def generate_genre_set():
+def generate_genre_set(srcFile):
     genres=set()
-    tree = ET.parse('../source/MovieDiC_V2_clean.xml')
+    tree = ET.parse(srcFile)
     root = tree.getroot()
     for movie in root.findall('movie'):
         title = movie.get('title')
@@ -57,14 +57,14 @@ def create_and_print_json(genres_set):
             json.dump(all_genres, outfile)
 
 def create_categories_dict():
-    genres = generate_genre_set()
+    genres = generate_genre_set(srcFile)
     create_and_print_json(genres)
 
-def categorize_movies():
+def categorize_movies(srcFile):
     with open('../outputs/categories.json') as data_file:
         genres = json.load(data_file)
 
-    tree = ET.parse('../source/MovieDiC_V2_clean.xml')
+    tree = ET.parse(srcFile)
     root = tree.getroot()
     allMovies=dict()
     allCategories=defaultdict(list)
@@ -93,4 +93,39 @@ def categorize_movies():
         with open('../outputs/moviesPerCategory.json', 'w') as outfile:
             json.dump(allCategories, outfile)
 
-categorize_movies()
+def generate_all_infos_json(srcFile):
+    print "Extracting movies' details from the OMDB API"
+    with open('../outputs/categories.json') as data_file:
+        genres = json.load(data_file)
+
+    tree = ET.parse(srcFile)
+    root = tree.getroot()
+    allInfos = dict()
+    for movie in root.findall('movie'):
+        id_movie = movie.get('id')
+        title = movie.get('title')
+        title = generate_clean_title(title)
+        print "Processing " + title
+        jsonResponse = query_movie_api(title)
+        if jsonResponse['Response'] == "True":
+            del jsonResponse['Response']
+            del jsonResponse['Rated']
+            del jsonResponse['Released']
+            del jsonResponse['Writer']
+            del jsonResponse['Plot']
+            del jsonResponse['Language']
+            del jsonResponse['Awards']
+            del jsonResponse['Poster']
+            del jsonResponse['Metascore']
+            del jsonResponse['imdbID']
+            del jsonResponse['Type']
+            allInfos[id_movie] = jsonResponse
+    with open('../outputs/allMovies.json', 'w') as outfile:
+            json.dump(allInfos, outfile)
+
+# srcFile = "../../../../data/1movie.xml"
+# srcFile = "../../../../data/3movies.xml"
+srcFile = "../../../../data/MovieDiC_V2_clean.xml"
+# create_categories_dict(srcFile)
+# categorize_movies(srcFile)
+generate_all_infos_json(srcFile)

@@ -23,6 +23,12 @@ class AnswerEngineAPI(object):
         db.insert(sentence, tokTypes) #timeout
         return sentence
 
+    def findNextSentenceType(self,history,lenghtHisto):
+        server = GraphServer("../../../neo4j")
+        graph = server.graph
+        # graph.cypher.execute("MATCH (n:SentenceHisto)-[r]-() WHERE n.sentence=\""+sentences[0]["sentence"]+"\" DELETE n, r")
+
+
     def getRandomAnswer(self, userLine, category):
         server = GraphServer("../../../neo4j")
         graph = server.graph

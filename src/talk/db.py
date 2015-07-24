@@ -21,6 +21,7 @@ def insert(sentence, tokensAndType):
 	is_of_type = Relationship(sentence, "is_of_type", sentenceType)
 	is_of_form = Relationship(sentence, "is_of_type", sentenceForm) # pos / neg
 	graph.create(is_of_type)
+	graph.create(is_of_form)
 
 	print numberOfSentences
 	if numberOfSentences == 0:
