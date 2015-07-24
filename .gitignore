@@ -69,3 +69,6 @@ target/
 
 # Neo4jDB
 /neo4j/*
+
+# source
+/src/pre-processing/movies-categorization/source/*

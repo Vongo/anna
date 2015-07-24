@@ -6,6 +6,9 @@ import xml.etree.ElementTree as ET
 import sys
 sys.path.insert(0, '../../talk')
 import histo
+sys.path.insert(0, '../')
+import buildStats
+from py2neo.packages.httpstream import http
 
 def create_constraints(schema):
     # Movies
@@ -51,7 +54,6 @@ def create_sentence_types(graph):
     graph.create(greet)
 
 def parseMoviesXML(graph):
-    # tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
     tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
@@ -78,12 +80,13 @@ def parseMoviesXML(graph):
             movie_is_composed_of = Relationship(currentMovie,"IS_COMPOSED_OF", currentDial)
             graph.create_unique(movie_is_composed_of)
             # Sentences
+            last_sentence = None;
             for i in range(0, int(dialogue.get('n_utterances'))):
                 currentSentence = graph.find_one("Sentence",
                     property_key="id",
                     property_value = movie.get('id')+"_"+dialogue.get('id')+"_"+str(i))
                 if currentSentence is None :
-                    currentSentence = Node("Sentence", id=movie.get('id')+"_"+dialogue.get('id')+"_"+str(i), full_sentence=dialogue[3+(4*i)].text)
+                    currentSentence = Node("Sentence", id=movie.get('id')+"_"+dialogue.get('id')+"_"+str(i), full_sentence=dialogue[3+(4*i)].text, order=i)
                 dial_is_composed_of = Relationship(currentDial,"IS_COMPOSED_OF", currentSentence)
                 graph.create_unique(dial_is_composed_of)
                 # Speaker
@@ -116,6 +119,11 @@ def parseMoviesXML(graph):
                     is_composed_of = Relationship(currentSentence, "is_composed_of", token)
                     graph.create_unique(is_composed_of)
 
+                if last_sentence != None:
+                    sentence_followed_by = Relationship(last_sentence, "sentence_followed_by", currentSentence)
+                    graph.create(sentence_followed_by)
+                last_sentence = currentSentence
+
         print "  Done."
 
 
@@ -145,6 +153,12 @@ try:
     print "Initing histo..."
     init_histo(graph)
     print "Done."
+    print "Initing Stats..."
+    buildStats.initStatsGraph(graph)
+    print "Building Stats..."
+    http.socket_timeout = 9999
+    buildStats.buildStats(graph)
+    print "Stats Done."
 except:
     raise
 finally:
