@@ -1,6 +1,7 @@
 from py2neo import Node, Relationship
 from py2neo.server import GraphServer
 from collections import defaultdict
+import time
 
 def initStatsGraph(graph):
 
@@ -35,70 +36,86 @@ def initStatsGraph(graph):
 	has = Relationship(stats, 'has', affPos)
 	graph.create(has)
 
-# Take a dictionaire with number of occurence of each sentene types
-# Return dictionaire with probas of each sentene type 
-def computeProbs(occurences):
+def getType(sentence, graph):
 
-	probas = dict();
+	typesNodes = graph.cypher.execute("MATCH (s:Sentence{id:'"+sentence.properties['id']+"'})--(t:SentenceType) RETURN t")
 
-	total_sentence = 0.0
-	for typeOcc in occurences:
-		total_sentence = total_sentence + occurences[typeOcc]
-	
-	for typeOcc in occurences:
-		probas[typeOcc] = occurences[typeOcc]/total_sentence
+	if len(typesNodes) == 3:
+		return 'greeting'
+	elif typesNodes[1]['t'].properties['label'] == 'negative' or typesNodes[1]['t'].properties['label'] == 'positive':
+		return typesNodes[0]['t'].properties['label'] + ' ' + typesNodes[1]['t'].properties['label']
+	else:
+		return typesNodes[1]['t'].properties['label'] + ' ' + typesNodes[0]['t'].properties['label']
+
+def computeProbas(occurences):
+
+	probas = defaultdict(lambda: defaultdict(int))
+
+	for sType, typesDico  in occurences.iteritems():
+
+		total_sentence = 0.0
+		for s2Type in typesDico:
+			total_sentence = total_sentence + typesDico[s2Type]
+
+		for s2Type in typesDico:
+			probas[sType][s2Type] = typesDico[s2Type]/total_sentence
 
 	return probas
 
-def buildQuery(typesNodePath):
+def buildProbas(dialogues, length, graph):
 
-	queryString = "MATCH (d:Dialogue)"
-	typeString = ""
-	for key, node in enumerate(typesNodePath):
-		queryString = queryString + "-->(s"+str(key)+":Sentence)"
-		if node.properties['label'] == "greeting":
-			typeString = typeString + ", (s"+str(key)+":Sentence)--(:SentenceType{label:'"+node.properties['label']+"'})"
+	occurences = defaultdict(lambda: defaultdict(int))
+	for key, dialogue in enumerate(dialogues):
+
+			sentences = dialogue['p'].nodes[1:]
+			for key, sentence in enumerate(sentences):
+
+				if key>=length:
+
+					previousTypes = ''
+					for i in range(0,length):
+
+						if i == 0:
+							previousTypes = getType(sentences[key-length+i], graph)
+						else:
+							previousTypes = previousTypes + ' - ' + getType(sentences[key-length+i], graph)
+
+					currentType = getType(sentence, graph)
+					occurences[previousTypes][currentType] = occurences[previousTypes][currentType] + 1
+
+	probas = computeProbas(occurences)
+
+	return probas
+
+def buildQuery(strLabels):
+
+	queryString = "MATCH (:Stats)"
+	labels = strLabels.split('-')
+	for label in labels:
+		if label == labels[-1]:
+			queryString = queryString + '--(node:TypeStat{label:"'+label.lstrip().rstrip()+'"})'
 		else:
-			typeString = typeString + ", (s"+str(key)+":Sentence)--(:SentenceType{label:'"+node.properties['label'].rsplit()[0]+"'}), (s"+str(key)+":Sentence)--(:SentenceType{label:'"+node.properties['label'].rsplit()[1]+"'})"
-	queryString = queryString+"-->(s"+str(len(typesNodePath))+":Sentence)" + typeString + " RETURN s"+str(len(typesNodePath))
+			queryString = queryString + '--(:TypeStat{label:"'+label.lstrip().rstrip()+'"})'
+
+	queryString = queryString + ' RETURN node'
 
 	return queryString
 
-def buildProb(graph, typesNodePath):
+def buildTreeStats(probas, graph):
+	
+	for key, Dval in probas.iteritems():
+		query = buildQuery(key)
+		node = graph.cypher.execute(query)
 
-	occurences = dict();
-
-	queryString = buildQuery(typesNodePath)
-	sentences = graph.cypher.execute(queryString)
-
-	for sentence in sentences:
-
-		types = graph.cypher.execute("MATCH (s:Sentence{id:'"+sentence[0].properties['id']+"'})--(t:SentenceType) RETURN t")
-		if types[0][0].properties['label']+" "+types[1][0].properties['label'] in occurences:
-			occurences[types[0][0].properties['label']+" "+types[1][0].properties['label']] = occurences[types[0][0].properties['label']+" "+types[1][0].properties['label']]+1
-		else:
-			occurences[types[0][0].properties['label']+" "+types[1][0].properties['label']] = 1
-
-	probas = computeProbs(occurences)
-	next = len(probas)
-
-	followingsNode = []
-	for key, sType in enumerate(probas):
-		typeProbNode = Node("TypeStat", label=sType, prob=probas[sType])
-		has = Relationship(typesNodePath[-1], 'has', typeProbNode)
-		graph.create(has)
-		followingsNode.append(typeProbNode)
-		
-	if len(typesNodePath) < 5 and next != 0:
-		for node in followingsNode:
-			typesNodePath.append(node)
-			buildProb(graph, typesNodePath)
-			typesNodePath.pop()
+		for v in Dval:
+			newNode = Node("TypeStat", label=v, prob=Dval[v])
+			has = Relationship(node[0]["node"], 'has', newNode)
+			graph.create(has)
 
 def buildStats(graph):
 
-	typesNode = graph.find("TypeStat")
-	# For each type build its path with associated probs
-	for typeNode in typesNode:
-
-		buildProb(graph, [typeNode])
+	dialogues = graph.cypher.execute("MATCH p=(d:Dialogue)-[:IS_COMPOSED_OF]-(s1:Sentence{order:0})-[:sentence_followed_by*]-(s:Sentence) WHERE length(p)=toInt(d.n_utterances) RETURN p")
+	
+	for length in range(1,5):
+		probas = buildProbas(dialogues, length, graph)
+		buildTreeStats(probas, graph)
