@@ -54,7 +54,7 @@ def create_sentence_types(graph):
     graph.create(greet)
 
 def parseMoviesXML(graph):
-    tree = ET.parse('../../../data/1movie.xml')
+    tree = ET.parse('../../../data/3movies.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
@@ -156,7 +156,6 @@ try:
     print "Initing Stats..."
     buildStats.initStatsGraph(graph)
     print "Building Stats..."
-    http.socket_timeout = 9999
     buildStats.buildStats(graph)
     print "Stats Done."
 except:
