@@ -5,7 +5,6 @@ import db;
 def getTokensAndType(sentence):
 	allTokens = nltk.word_tokenize(sentence)
 	tagged = nltk.pos_tag(allTokens)
-
 	tokens = []
 	for tag in tagged:
 		if tag[1].startswith('NN') or tag[1].startswith('VB'):

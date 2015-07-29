@@ -35,7 +35,7 @@ class AnswerEngineAPI(object):
         act = None
         try:
             movie = random.randint(1,1)
-            dialogue = random.randint(1,50)
+            dialogue = random.randint(1,10  )
             sen = random.randint(1,3)
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
             act = graph.find_one("Sentence", property_key="id", property_value=id)
@@ -43,7 +43,7 @@ class AnswerEngineAPI(object):
         except:
             act = "FAIL"
             raise
-        return act
+        return act.properties["full_sentence"]
 
 def getAnswer(userLine, history, category):
     anna = AnswerEngineAPI()
