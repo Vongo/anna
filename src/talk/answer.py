@@ -15,7 +15,7 @@ class AnswerEngineAPI(object):
     def __init__(self):
         super(AnswerEngineAPI, self).__init__()
 
-    def getAnnasAnswer(self, userLine, history, category):
+    def getAnnasAnswer(self, userLine, category):
         tokTypesUser = histo.getTokensAndType(userLine)
         db.insert(userLine, tokTypesUser) #timeout
         sentence = self.getRandomAnswer(userLine, category)
@@ -34,6 +34,7 @@ class AnswerEngineAPI(object):
         graph = server.graph
         act = None
         try:
+            print "Python " + category
             movie = random.randint(1,1)
             dialogue = random.randint(1,10)
             sen = random.randint(1,3)
@@ -45,6 +46,6 @@ class AnswerEngineAPI(object):
             raise
         return act.properties["full_sentence"]
 
-def getAnswer(userLine, history, category):
+def getAnswer(userLine, category):
     anna = AnswerEngineAPI()
-    return anna.getAnnasAnswer(userLine, history, category)
+    return anna.getAnnasAnswer(userLine, category)

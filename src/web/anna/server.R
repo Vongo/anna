@@ -27,7 +27,7 @@ shinyServer(function(input, output, session) {
 		# python.load(PYTHON_ANSWER_PATH)
 		# answer <- sample(python.get("answer"),1)
 
-		answer <- source(API_PATH,chdir=T)$value(userLine,"",input$categories)
+		answer <- source(API_PATH,chdir=T)$value(userLine,input$categories)
 
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
