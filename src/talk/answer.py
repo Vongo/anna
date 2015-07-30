@@ -16,6 +16,7 @@ class AnswerEngineAPI(object):
         super(AnswerEngineAPI, self).__init__()
 
     def getAnnasAnswer(self, userLine, history, category):
+        # self.findNextSentenceType(history, 5)
         tokTypesUser = histo.getTokensAndType(userLine)
         db.insert(userLine, tokTypesUser) #timeout
         sentence = self.getRandomAnswer(userLine, category)
@@ -26,7 +27,12 @@ class AnswerEngineAPI(object):
     def findNextSentenceType(self,history,lenghtHisto):
         server = GraphServer("../../../neo4j")
         graph = server.graph
-        # graph.cypher.execute("MATCH (n:SentenceHisto)-[r]-() WHERE n.sentence=\""+sentences[0]["sentence"]+"\" DELETE n, r")
+        types =graph.cypher.execute("MATCH (n:Histo)-[r*0..5]->(sh:SentenceHisto)-[is_of_type]->(st:SentenceType) RETURN st.label AS label")
+        # Build SentenceType "path"
+        listTypes=[]
+        for i in range(len(types)/2):
+            listTypes.append(types[2*i+1].label +' ' + types[2*i].label)
+        # print listTypes
 
 
     def getRandomAnswer(self, userLine, category):
@@ -36,7 +42,7 @@ class AnswerEngineAPI(object):
         try:
             movie = random.randint(1,1)
             dialogue = random.randint(1,10)
-            sen = random.randint(1,3)
+            sen = random.randint(1,1)
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
             act = graph.find_one("Sentence", property_key="id", property_value=id)
             print act.properties["full_sentence"]

@@ -8,7 +8,8 @@ def insert(sentence, tokensAndType):
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 
-	sentences = list(graph.find("SentenceHisto"))
+	sentences = graph.cypher.execute("MATCH (n:Histo)-[r*0..5]->(st:SentenceHisto) RETURN st")
+	print sentences
 	numberOfSentences = len(sentences)
 
 	sentence = Node("SentenceHisto", sentence=sentence)
@@ -23,8 +24,7 @@ def insert(sentence, tokensAndType):
 	is_of_form = Relationship(sentence, "is_of_type", sentenceForm) # pos / neg
 	graph.create(is_of_type)
 	graph.create(is_of_form)
-
-	print numberOfSentences
+	print 'nb sentences : ' + str(numberOfSentences)
 	if numberOfSentences == 0:
 		histo = graph.find_one("Histo",
 								property_key="label",
@@ -35,15 +35,18 @@ def insert(sentence, tokensAndType):
 		histo = graph.find_one("Histo",
 								property_key="label",
 								property_value = "histo")
-		has = Relationship(histo, "is_followed_by", sentences[1])
+		has = Relationship(histo, "is_followed_by", sentences[1][0])
 		graph.create(has)
 
-		graph.cypher.execute("MATCH (n:SentenceHisto)-[r]-() WHERE n.sentence=\""+sentences[0]["sentence"]+"\" DELETE n, r")
-		is_followed_by = Relationship(sentences[-1], "is_followed_by", sentence)
+		for rel in sentences[0][0].match():
+			graph.delete(rel)
+		graph.delete(sentences[0][0])
+
+		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
 
 	else:
-		is_followed_by = Relationship(sentences[-1], "is_followed_by", sentence)
+		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
 		
 	for token in tokensAndType[0]:
