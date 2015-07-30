@@ -55,3 +55,9 @@ def insert(sentence, tokensAndType):
 		
 		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
+
+def clean_histo():
+	server = GraphServer("../../../neo4j")
+	graph=server.graph
+	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-()  DELETE rels, n")
+	
