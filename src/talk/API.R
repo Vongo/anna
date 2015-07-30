@@ -1,5 +1,4 @@
 function(userLine,category) {
-	print(category)
 	PYTHON_ANSWER_DIR = "../../talk"
 	PYTHON_ANSWER_PATH = paste(PYTHON_ANSWER_DIR,"/answer.py",sep="")
 	require(rPython)

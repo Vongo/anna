@@ -34,7 +34,6 @@ class AnswerEngineAPI(object):
         graph = server.graph
         act = None
         try:
-            print "Python " + category
             movie = random.randint(1,1)
             dialogue = random.randint(1,10)
             sen = random.randint(1,3)
