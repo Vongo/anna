@@ -1,3 +1,3 @@
 #!/usr/bin/python
 
-hi = ["I am here to serve you","Be my guest","How do you do ?","Hey you","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi","Hi"]
+hi = ["I am here to please you USER.","Be my guest, USER.","How do you do, USER ?","Hey you !","Hi, USER.","Hi, USER.","Hi, USER.","Hi, USER.","Hi, USER.","Hi, USER.", "Hi !!"]

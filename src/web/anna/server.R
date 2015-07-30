@@ -23,6 +23,16 @@ shinyServer(function(input, output, session) {
 		paste("<b>",as.character(Sys.time()),", ",user," said</b> : ",quote, sep="")
 	}
 
+	replace.username <- function(sentence, rep=input$userName) {
+		if (grepl("USER", sentence)){
+			dec <- strsplit(sentence,"USER")
+			left <- dec[[1]][1]
+			right <- dec[[1]][2]
+			paste(left,rep,right,sep="")
+		}
+		else sentence
+	}
+
 	anna.answers <- function(userLine, history=NULL) {
 		# python.load(PYTHON_ANSWER_PATH)
 		# answer <- sample(python.get("answer"),1)
@@ -36,6 +46,7 @@ shinyServer(function(input, output, session) {
 	anna.says.hi <- function() {
 		python.load(paste(PYTHON_ANSWER_DIR,"/test.py",sep=""))
 		answer <- sample(python.get("hi"),1)
+		answer <- replace.username(answer)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}
