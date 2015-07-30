@@ -69,7 +69,6 @@ shinyServer(function(input, output, session) {
 			"2" = {TESTMODE <<- F},
 			{print("TestMode not set.")}
 		)
-
 	})
 
 	observe({
