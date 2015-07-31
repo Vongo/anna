@@ -34,11 +34,8 @@ shinyServer(function(input, output, session) {
 	}
 
 	anna.answers <- function(userLine, history=NULL) {
-		# python.load(PYTHON_ANSWER_PATH)
-		# answer <- sample(python.get("answer"),1)
-
 		answer <- source(API_PATH,chdir=T)$value(userLine,input$categories)
-
+		answer <- replace.username(answer)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}
