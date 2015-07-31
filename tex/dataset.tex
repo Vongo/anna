@@ -43,6 +43,8 @@
   % morekeywords={xmlns,xsi,noNamespaceSchemaLocation,type,id,x,y,source,target,version,tool,transRef,roleRef,objective,eventually}% list your attributes here
 }
 
+\lstdefinelanguage{json}{}
+
 \section{Dataset}
 This section describe the chosen dataset and explain how we enriched it. Statistics about data are also presented.
 \subsection{Initial Dataset}
@@ -70,4 +72,11 @@ Then, some of the movies' titles are modified. For instance \say{X Files Fight t
 Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
 \subsection{Enrichments}
 \label{ssec:enrich}
+The Movie-DiC corpus only contains data about the content of the movie, but no data about the movie itself apart from its title. In order to build statistics, presented in section \ref{ssec:stats}, we enriched the corpus with the help of the Open Movie Database (short OMDb) API\footnote{http://www.omdbapi.com/}. This API is maintained by its users and isn't endorsed by or affiliated with the more famous IMDB website\footnote{http://www.imdb.com/}.\\
+The use of the OMDb is really simple. It provides a web service which allows us to search for a movie given its title. It then returns lot of data about the movie such as its released year/date, genre, director's and actor's names, language, country. It also pull out some data from imdb such as the number of votes or the average rating.\\
+Here's an example of usage :\\
+Query : http://www.omdbapi.com/?t=Whiplash\&plot=short\&r=json\\
+Answer :
+\lstinputlisting[language=json,caption=OMDb answer,label={code:omdb}]{whiplash.json}
 \subsection{Statistics}
+\label{ssec:stats}
