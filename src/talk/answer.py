@@ -20,10 +20,10 @@ class AnswerEngineAPI(object):
         db.insert(userLine, tokTypesUser) #timeout
 
         # Random version
-        # sentence = self.getRandomAnswer()
+        sentence = self.getRandomAnswer()
 
         # Good SentenceType version
-        sentence = self.getAnswerWithGoodSentenceType(5,3)
+        # sentence = self.getAnswerWithGoodSentenceType(5,3)
 
         # Good SentenceType + movie category version
         # sentence = self.getAnswerWithGoodSentenceTypeAndCategory(5,3)
@@ -37,10 +37,13 @@ class AnswerEngineAPI(object):
         graph = server.graph
         act = None
         try:
-            movie = random.randint(1,1)
-            dialogue = random.randint(1,10)
-            sen = random.randint(1,1)
+            movie = random.randint(1,sum(1 for _ in graph.find("Movie")))
+            print movie
+            dialogue = random.randint(0,100)
+            print dialogue
+            sen = random.randint(0,sum(1 for _ in graph.find_one("Dialogue", property_key="id", property_value=str(movie) + "_" + str(dialogue)).match_outgoing(rel_type="IS_COMPOSED_OF")))
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
+            print id
             act = graph.find_one("Sentence", property_key="id", property_value=id)
             print act.properties["full_sentence"]
         except:
@@ -82,23 +85,23 @@ class AnswerEngineAPI(object):
         print records[index].sentence
         return records[index].sentence
 
-    def getAnswerWithGoodSentenceTypeAndCategory(self, lenghtHisto, depthHisto, categoryString):
-        server = GraphServer("../../../neo4j")
-        graph = server.graph
-        labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
-        print labels
-        # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}),
-        # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
-        # (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:'Crime'})
-        # RETURN n.full_sentence AS sentence
-        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), "+
-        "(n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) "+
-        "(n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) " +
-        "RETURN n.full_sentence AS sentence LIMIT 100"
-        records = graph.cypher.execute(sentencesQuery)
-        index = random.randint(0,99)
-        print records[index].sentence
-        return records[index].sentence
+    # def getAnswerWithGoodSentenceTypeAndCategory(self, lenghtHisto, depthHisto, categoryString):
+    #     server = GraphServer("../../../neo4j")
+    #     graph = server.graph
+    #     labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
+    #     print labels
+    #     # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}),
+    #     # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
+    #     # (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:'Crime'})
+    #     # RETURN n.full_sentence AS sentence
+    #     sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), "+
+    #     "(n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) "+
+    #     "(n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) " +
+    #     "RETURN n.full_sentence AS sentence LIMIT 100"
+    #     records = graph.cypher.execute(sentencesQuery)
+    #     index = random.randint(0,99)
+    #     print records[index].sentence
+    #     return records[index].sentence
 
 def getAnswer(userLine, category):
     anna = AnswerEngineAPI()
