@@ -24,6 +24,9 @@ class AnswerEngineAPI(object):
 
         # Good SentenceType version
         sentence = self.getAnswerWithGoodSentenceType(5,3)
+
+        # Good SentenceType + movie category version
+        # sentence = self.getAnswerWithGoodSentenceTypeAndCategory(5,3)
         
         tokTypes = histo.getTokensAndType(sentence)
         db.insert(sentence, tokTypes) #timeout
@@ -73,9 +76,27 @@ class AnswerEngineAPI(object):
         labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
         print labels
         # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}) RETURN n LIMIT 25
-        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) RETURN n.full_sentence AS sentence LIMIT 25"
+        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) RETURN n.full_sentence AS sentence LIMIT 100"
         records = graph.cypher.execute(sentencesQuery)
-        index = random.randint(0,24)
+        index = random.randint(0,99)
+        print records[index].sentence
+        return records[index].sentence
+
+    def getAnswerWithGoodSentenceTypeAndCategory(self, lenghtHisto, depthHisto, categoryString):
+        server = GraphServer("../../../neo4j")
+        graph = server.graph
+        labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
+        print labels
+        # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}), 
+        # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
+        # (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:'Crime'})
+        # RETURN n.full_sentence AS sentence 
+        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), "+
+        "(n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) "+
+        "(n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) " +
+        "RETURN n.full_sentence AS sentence LIMIT 100"
+        records = graph.cypher.execute(sentencesQuery)
+        index = random.randint(0,99)
         print records[index].sentence
         return records[index].sentence
 
