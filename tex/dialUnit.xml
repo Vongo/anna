@@ -1,0 +1,14 @@
+<dialogue id="2" n_utterances="3">
+   <speaker>SECURITY GUARD</speaker>
+      <mode></mode>
+      <context>K The Guard glances up as Jacket Man gets into an ELEVATOR.</context>
+      <utterance>Crump... I'm sorry, no one by that name.</utterance>
+   <speaker>SECURITY GUARD</speaker>
+      <mode></mode>
+      <context>The Security Guard rushes to intercept him.</context>
+      <utterance>Hey! You can't go up there!</utterance>
+   <speaker>SECURITY GUARD</speaker>
+      <mode></mode>
+      <context></context>
+      <utterance>We've got an intruder in the express elevator!</utterance>
+</dialogue>

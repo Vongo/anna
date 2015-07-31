@@ -1,4 +1,73 @@
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{lightblue}{rgb}{0.0,0.0,0.9}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  showstringspaces=false,
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=none,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title  
+  commentstyle=\color{gray}\upshape
+}
+
+
+\lstdefinelanguage{XML}
+{
+  morestring=[s][\color{mauve}]{"}{"},
+  morestring=[s][\color{black}]{>}{<},
+  morecomment=[s]{<?}{?>},
+  morecomment=[s][\color{dkgreen}]{<!--}{-->},
+  stringstyle=\color{black},
+  identifierstyle=\color{lightblue},
+  keywordstyle=\color{red},
+  % morekeywords={xmlns,xsi,noNamespaceSchemaLocation,type,id,x,y,source,target,version,tool,transRef,roleRef,objective,eventually}% list your attributes here
+}
+
 \section{Dataset}
+This section describe the chosen dataset and explain how we enriched it. Statistics about data are also presented.
 \subsection{Initial Dataset}
+\subsubsection{Description}
+The first challenge we had to face was finding a corpus of movies' dialogues. Luckily, our supervisor provided us one called Movie-DiC. This corpus has been built by R. Banchs \cite{banchs} for research and development purposes.\\
+Movie-DiC comprises 132,229 dialogues, containing 764,146 turns (also called utterances) extracted from 753 different movies. In \cite{banchs}, the author mention some basic statistics about the corpus :
+\begin{itemize}
+\item Avg. amount of dialogues per movie : 175.60
+\item Avg. amount of utterances per dialogue : 5.78
+\end{itemize}
+The corpus consist on a XML document of 2,249,053 lines, its structure isn't so complex since his maximal depth is only of 3 (movie - dialogue - utterance). See Code~\ref{code:dial} for an example of a dialogue unit.\\
+\lstinputlisting[language=XML,caption=Dialogue unit,label={code:dial}]{dialUnit.xml}
+This dialogue is pulled out the \say{xXx} movie\footnote{xXx on IMDB : http://www.imdb.com/title/tt0295701/} produced in 2002 by Rob Cohen.
+\subsubsection{Remarks}
+This dataset is really interesting but some details rose small issues during the project.\\
+First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a succession of tags which follows a specific patern :
+\begin{enumerate}
+\item Speaker : who is speaking ?
+\item Mode : is he happy/suspicious/\dots ?
+\item Context : description of the shot
+\item Utterence : the speaker's speech
+\end{enumerate}
+We found it strange that all those 4 tags aren't childs of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's childs and group every group of 4 tags together in a single entity.\\
+Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section~\ref{ssec:enrich}). \\
+Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
 \subsection{Enrichments}
+\label{ssec:enrich}
 \subsection{Statistics}
