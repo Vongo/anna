@@ -37,8 +37,8 @@ class AnswerEngineAPI(object):
         graph = server.graph
         act = None
         try:
-            movie = random.randint(1,1)
-            dialogue = random.randint(1,10)
+            movie = random.randint(0,len(graph.find("Movie")))
+            dialogue = random.randint(0,10)
             sen = random.randint(1,1)
             id = str(movie) + "_" + str(dialogue) + "_" + str(sen)
             act = graph.find_one("Sentence", property_key="id", property_value=id)
