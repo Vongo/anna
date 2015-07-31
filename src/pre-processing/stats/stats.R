@@ -21,7 +21,6 @@ xx$Runtime <- sapply(xx$Runtime, function(x) as.numeric(strsplit(x, " ")[[1]][1]
 xx$Year <- sapply(xx$Year, function(x) as.numeric(strsplit(x, "–")[[1]][1]))
 xx$imdbRating <- as.numeric(xx$imdbRating)
 xx$imdbVotes <- as.numeric(xx$imdbVotes)
-xx$Runtime <- as.numeric(xx$Runtime)
 
 cooccurrences <- function(units, liste) {
     amtx <- matrix(0, length(units), length(units), dimnames=list(units, units))
@@ -71,20 +70,44 @@ coocCountry <- cooccurrences(countrys,countryBmovie)
 write.table(coocCountry, "./results/coocCountry.csv", col.names=T, row.names=T, sep=";")
 
 # Note moyenne par pays
-rateBcountry <- sapply(countrys, function(d) {
-    mean(xx[grepl(d,xx$Country),"imdbRating"])
+rateBcountry <- sapply(countrys, function(c) {
+    grades <- xx[grepl(c,xx$Country),"imdbRating"]
+    grades <- grades[complete.cases(grades)]
+    ifelse(length(grades)>1, mean(grades), NA)
 })
 names(rateBcountry) <- countrys
 rateBcountry <- rateBcountry[order(rateBcountry)]
 rateBcountry <- rateBcountry[!is.na(rateBcountry)]
 
+png("./results/rateByCountry.png",height=360,width=480)
+x <- barplot(rateBcountry, xaxt="n")
+labs <- names(rateBcountry)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
+
 # Note moyenne par acteur
 rateBactor <- sapply(acteurs, function(d) {
-    mean(xx[grepl(d,xx$Actors),"imdbRating"])
+    grades <- xx[grepl(d,xx$Actors),"imdbRating"]
+    grades <- grades[complete.cases(grades)]
+    ifelse(length(grades)>1, mean(grades), NA)
 })
 names(rateBactor) <- acteurs
 rateBactor <- rateBactor[order(rateBactor)]
 rateBactor <- rateBactor[!is.na(rateBactor)]
+
+worstActors <- rateBactor[1:10]
+png("./results/worstActors.png",height=360,width=480)
+x <- barplot(worstActors, xaxt="n")
+labs <- names(worstActors)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
+
+bestActors <- rateBactor[(length(rateBactor)-10):length(rateBactor)]
+png("./results/bestActors.png",height=360,width=480)
+x <- barplot(bestActors, xaxt="n")
+labs <- names(bestActors)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
 
 # Note moyenne par réalisateur
 directorBmovie <- lapply(movieNames, function(m) {
@@ -93,37 +116,85 @@ directorBmovie <- lapply(movieNames, function(m) {
 })
 directors <- unique(unlist(directorBmovie))
 rateBdirector <- sapply(directors, function(d) {
-    mean(xx[grepl(d,xx$Director),"imdbRating"])
+    grades <- xx[grepl(d,xx$Director),"imdbRating"]
+    grades <- grades[complete.cases(grades)]
+    ifelse(length(grades)>1, mean(grades), NA)
 })
 names(rateBdirector) <- directors
 rateBdirector <- rateBdirector[order(rateBdirector)]
 rateBdirector <- rateBdirector[!is.na(rateBdirector)]
 
+worstDirectors <- rateBdirector[1:10]
+png("./results/worstDirectors.png",height=360,width=480)
+x <- barplot(worstDirectors, xaxt="n")
+labs <- names(worstDirectors)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
+
+bestDirectors <- rateBdirector[(length(rateBdirector)-10):length(rateBdirector)]
+png("./results/bestDirectors.png",height=360,width=480)
+x <- barplot(bestDirectors, xaxt="n")
+labs <- names(bestDirectors)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
+
 # Note moyenne par année
 rateByear <- tapply(xx$imdbRating, xx$Year, mean)
-qplot(names(rateByear),rateByear)
+years <- unique(xx$Year)
+
+fit <- lm(rateByear ~ years)
+
+png("./results/ratingEvolution.png",height=360,width=480)
+plot(years, rateByear)
+abline(fit)
+dev.off()
 
 # Note moyenne par genre
 rateBgenre <- sapply(genres, function(d) {
-    mean(xx[grepl(d,xx$Genre),"imdbRating"])
+    grades <- xx[grepl(d,xx$Genre),"imdbRating"]
+    grades <- grades[complete.cases(grades)]
+    ifelse(length(grades)>1, mean(grades), NA)
 })
 names(rateBgenre) <- genres
 rateBgenre <- rateBgenre[order(rateBgenre)]
 rateBgenre <- rateBgenre[!is.na(rateBgenre)]
 
+png("./results/rateByGenre.png",height=360,width=480)
+x <- barplot(rateBgenre, xaxt="n")
+labs <- names(rateBgenre)
+text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
+dev.off()
+
 # note/durée
-qplot(xx$Runtime,xx$imdbRating)
+fit <- lm(xx$imdbRating ~ xx$Runtime)
+png("./results/ratingPerRuntime.png",height=360,width=480)
+plot(xx$Runtime,xx$imdbRating)
+abline(fit)
+dev.off()
 
 # note/nombreVotes
-qplot(xx$imdbVotes, xx$imdbRating)
+Data <- xx[,c("imdbRating","imdbVotes")]
+names(Data) <- c("y","x")
+Data <- Data[complete.cases(Data),]
+png("./results/ratingPerNbVotes.png",height=360,width=480)
+ggplot(Data, aes(x,y)) + geom_point() + geom_smooth()
+dev.off()
 
 # Durée moyenne par genre
 dureeBgenre <- sapply(genres, function(d) {
-    mean(xx[grepl(d,xx$Genre),"Runtime"])
+    duration <- xx[grepl(d,xx$Genre),"Runtime"]
+    duration <- duration[complete.cases(duration)]
+    ifelse(length(duration)>1, mean(duration), NA)
 })
 names(dureeBgenre) <- genres
 dureeBgenre <- dureeBgenre[order(dureeBgenre)]
 dureeBgenre <- dureeBgenre[!is.na(dureeBgenre)]
+
+png("./results/dureeByGenre.png",height=360,width=480)
+x <- barplot(dureeBgenre, xaxt="n")
+labs <- names(dureeBgenre)
+text(cex=1, x=x+0.75, y=-0.75, labs, xpd=TRUE, srt=45, pos=2)
+dev.off()
 
 # Nombre de films par genre par année
     nGenres <- length(genres)
