@@ -27,7 +27,7 @@ class AnswerEngineAPI(object):
 
         # Good SentenceType + movie category version
         # sentence = self.getAnswerWithGoodSentenceTypeAndCategory(5,3)
-        
+
         tokTypes = histo.getTokensAndType(sentence)
         db.insert(sentence, tokTypes) #timeout
         return sentence
@@ -90,10 +90,10 @@ class AnswerEngineAPI(object):
     #     graph = server.graph
     #     labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
     #     print labels
-    #     # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}), 
+    #     # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}),
     #     # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
     #     # (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:'Crime'})
-    #     # RETURN n.full_sentence AS sentence 
+    #     # RETURN n.full_sentence AS sentence
     #     sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), "+
     #     "(n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) "+
     #     "(n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) " +

@@ -99,9 +99,36 @@ Our app is called through R interpreter, which launches the User Interface. Then
 \subsection{Architecture}
 \label{sub:Architecture}
 
+If we take a look at Figure~\ref{fig:Archi}, we can see that the responsibilities given to R and Python are not the same.
+R is in charge of :
+\begin{itemize}
+    \item The User Interface, both for the cosmetic and the behavioural part.
+    These components will also be responsible for calling Python API through an elegant R API, thanks to the library \textit{rPython\footnote{$rpython.r-forge.r-project.org/$}}.
+    \item Building the statistics on the new data we get on the web.
+    For that matter, we use built-in R, as well as \textit{ggplot2\footnote{$ggplot2.org/$}} library.
+    For cooccurrences graphs, we build cooccurrence matrices, that we read and display with Gephi\footnote{$gephi.github.io/$}.
+    \item Taking into account the user's evaluations\footnote{In a later version.}.
+\end{itemize}
+
+On the other hand, Python is in charge of :
+\begin{itemize}
+    \item Retrieving information about the movies through OMDb API\footnote{$www.omdbapi.com/$}.
+    \item Parsing the XML dataset\footnote{$docs.python.org/2/library/xml.html$} to build the neo4j graphbase\footnote{$py2neo.org/$}.
+    \item Finding the best answer for a given conversation (Confer \ref{sub:Answering}).
+\end{itemize}
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=1.1\textwidth]{./img/Archi.png}
+\end{center}
+\caption{Anna's Architecture.}
+\label{fig:Archi}
+\end{figure}
 
 %
 \subsection{Anna's answers}
+\label{sub:Answering}
+
 \subsubsection{Version 1 : Random answers}
 \label{sssec:v_rand}
 There is not much to say about this first release. Like in all projects, we implemented a basic and stupid version to make sure that all communications processes (between R and Python for instance) are correctly working and that our queries to the graph are successful.\\
