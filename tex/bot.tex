@@ -104,7 +104,19 @@ Our app is called through R interpreter, which launches the User Interface. Then
 \subsection{Anna's answers}
 \subsubsection{Version 1 : Random answers}
 \label{sssec:v_rand}
-
+There is not much to say about this first release. Like in all projects, we implemented a basic and stupid version to make sure that all communications processes (between R and Python for instance) are correctly working and that our queries to the graph are successful.\\
+Anna's answer is selecting with the help of 3 random functions. First, we randomize the amount of movies in the graph : idMovie.\\
+Then, the average of dialogues per movie beeing 175.60, we get a random dialogue by randomizing between 0 and 100 : idDialogue.\\
+The sentence's id is also random, between 0 and the number of outgoing \textit{IS\_COMPOSED\_OF} relationships from the above dialogue : idSentence.\\
+And the winner is : idMovie\_idDialogue\_idSentence !\\
+This results on conversations which make no sense at all, see Figure \ref{fig:convRandom} for an example.\\
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.80\textwidth]{./img/convRandom.png}
+\end{center}
+\caption{Random conversation from V1}
+\label{fig:convRandom}
+\end{figure}
 \subsubsection{Version 2 : Determined SentenceType}
 \label{sssec:v_stype}
 
