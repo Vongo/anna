@@ -56,7 +56,7 @@ Movie-DiC comprises 132,229 dialogues, containing 764,146 turns (also called utt
 \item Avg. amount of utterances per dialogue : 5.78
 \end{itemize}
 The corpus consist on a XML document of 2,249,053 lines, its structure isn't so complex since his maximal depth is only of 3 (movie - dialogue - utterance). See Code~\ref{code:dial} for an example of a dialogue unit.\\
-\lstinputlisting[language=XML,caption=Dialogue unit,label={code:dial}]{dialUnit.xml}
+\lstinputlisting[language=XML,caption=Dialogue unit,label={code:dial}]{./prim/dialUnit.xml}
 This dialogue is pulled out the \say{xXx} movie\footnote{xXx on IMDB : http://www.imdb.com/title/tt0295701/} produced in 2002 by Rob Cohen.
 \subsubsection{Remarks}
 This dataset is really interesting but some details rose small issues during the project.\\
@@ -77,7 +77,7 @@ The use of the OMDb is really simple. It provides a web service which allows us 
 Here's an example of usage :\\
 Query : http://www.omdbapi.com/?t=Whiplash\&plot=short\&r=json\\
 Answer :
-\lstinputlisting[language=json,caption=OMDb answer,label={code:omdb}]{whiplash.json}
+\lstinputlisting[language=json,caption=OMDb answer,label={code:omdb}]{./prim/whiplash.json}
 So we processed the whole corpus through this API and saved only the following fields : Country, imdbRating, Director, Actors, Year, Genre, Runtime, imdbVotes. \\
 The \say{Genre} field is also used in one of our chatbot version, see section \ref{sssec:v_genre} for more details.
 

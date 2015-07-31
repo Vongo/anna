@@ -22,22 +22,22 @@ Regarding the technology, Neo4j\footnote{http://neo4j.com/} was chosen in regard
 Here, we will describe the actual structure of the corpus-graph. Remember that it isn't rigid so it might vary over the project's progress.\\
 Other nodes and relationships exist in our database but are used for other purposes such as the history of the conversation or some probabilities (see section \ref{sssec:v_stype}).\\
 Basically we can say that in our case, one vertex equals one XML tag. Instead of listing all the vertexes and the edges, we provide here an example based on a dialogue from the movie\footnote{12 Monkeys on IMDB : http://www.imdb.com/title/tt0114746/} \say{12 Monkeys}.
-\lstinputlisting[language=XML,caption=XML extract,label={code:extr}]{graphExample.xml}
+\lstinputlisting[language=XML,caption=XML extract,label={code:extr}]{./prim/graphExample.xml}
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=0.6\textwidth]{graph171.png}
+\includegraphics[width=0.8\textwidth]{./img/graph171.png}
 \end{center}
 \caption{Neo4j modelisation}
 \label{fig:neoExtr}
 \end{figure}
 With the above example we see that, just like in the XML (Code \ref{code:extr}), a \textbf{Movie} (pink) \textit{IS\_COMPOSED\_OF} \textbf{Dialogues} (gray, only one displayed here) which \textit{IS\_COMPOSED\_OF} several \textbf{Sentences} (green). Each sentence \textit{IS\_SPOKEN\_BY} a \textbf{Character} (purple).\\
-The labels of the dialogues and sentences are an aggregation of the id fields of their parents :
+We store the full sentence as an attribute of the Sentence node. The labels of the dialogues and sentences are an aggregation of the id fields of their parents :
 \begin{center}Sentence\_Node\_id = idMovie\_idDialogue\_idSentence \end{center}
 Now that we have represented the corpus as a graph, we can start to work with the NLP technology. Each sentence his processed and \dots \\
 \textbf{LEO, BLABLA A PROPOS DU DECOUPAGE EN TOKEN ET LES SENTENCESTYPES, REF A FIG.15}
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=0.5\textwidth]{graph1711.png}
+\includegraphics[width=0.5\textwidth]{./img/graph1711.png}
 \end{center}
 \caption{Sentence details}
 \label{fig:sent}
