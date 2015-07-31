@@ -15,7 +15,7 @@ class AnswerEngineAPI(object):
     def __init__(self):
         super(AnswerEngineAPI, self).__init__()
 
-    def getAnnasAnswer(self, userLine, history, category):
+    def getAnnasAnswer(self, userLine, category):
         tokTypesUser = histo.getTokensAndType(userLine)
         db.insert(userLine, tokTypesUser) #timeout
 
@@ -56,13 +56,13 @@ class AnswerEngineAPI(object):
         listTypes=[]
         for i in range(len(types)/2):
             listTypes.append(types[2*i+1].label +' ' + types[2*i].label)
-        
+
         # Sublist with the good length
         if len(listTypes) > depthHisto:
             queryTypes = listTypes[-depthHisto:]
         else:
             queryTypes = listTypes
-        # Model query : 
+        # Model query :
         queryString= "MATCH (s:Stats)"
         for label in queryTypes:
             queryString+="-->(:TypeStat{label:\'" + label +"\'})"
@@ -100,6 +100,6 @@ class AnswerEngineAPI(object):
         print records[index].sentence
         return records[index].sentence
 
-def getAnswer(userLine, history, category):
+def getAnswer(userLine, category):
     anna = AnswerEngineAPI()
-    return anna.getAnnasAnswer(userLine, history, category)
+    return anna.getAnnasAnswer(userLine, category)
