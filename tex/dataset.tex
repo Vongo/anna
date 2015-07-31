@@ -36,7 +36,7 @@
   morestring=[s][\color{mauve}]{"}{"},
   morestring=[s][\color{black}]{>}{<},
   morecomment=[s]{<?}{?>},
-  morecomment=[s][\color{dkgreen}]{<!--}{-->},
+  morecomment=[s][\color{dkgreen}]{!--}{--},
   stringstyle=\color{black},
   identifierstyle=\color{lightblue},
   keywordstyle=\color{red},
@@ -68,15 +68,17 @@ First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a s
 \item Utterence : the speaker's speech
 \end{enumerate}
 We found it strange that all those 4 tags aren't childs of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's childs and group every group of 4 tags together in a single entity.\\
-Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section~\ref{ssec:enrich}). \\
+Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section \ref{ssec:enrich}). \\
 Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
 \subsection{Enrichments}
 \label{ssec:enrich}
 The Movie-DiC corpus only contains data about the content of the movie, but no data about the movie itself apart from its title. In order to build statistics, presented in section \ref{ssec:stats}, we enriched the corpus with the help of the Open Movie Database (short OMDb) API\footnote{http://www.omdbapi.com/}. This API is maintained by its users and isn't endorsed by or affiliated with the more famous IMDB website\footnote{http://www.imdb.com/}.\\
-The use of the OMDb is really simple. It provides a web service which allows us to search for a movie given its title. It then returns lot of data about the movie such as its released year/date, genre, director's and actor's names, language, country. It also pull out some data from imdb such as the number of votes or the average rating.\\
+The use of the OMDb is really simple. It provides a web service which allows us to search for a movie given its title. It then returns lot of data about the movie such as its released year/date, genre, director's and actor's names, language, country. It also pulls out some data from imdb such as the number of votes or the average rating.\\
 Here's an example of usage :\\
 Query : http://www.omdbapi.com/?t=Whiplash\&plot=short\&r=json\\
 Answer :
 \lstinputlisting[language=json,caption=OMDb answer,label={code:omdb}]{whiplash.json}
+So we processed the whole corpus through this API and saved only the following fields : Country, imdbRating, Director, Actors, Year, Genre, Runtime, imdbVotes. \\
+The \say{Genre} field is also used in one of our chatbot version, see section \ref{sssec:v_genre} for more details.
 \subsection{Statistics}
 \label{ssec:stats}

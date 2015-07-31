@@ -1,0 +1,14 @@
+<movie id="1" title="12 Monkeys">
+	<!-- 70 other dialogues before this small one -->
+	<dialogue id="71" n_utterances="2">
+	   <speaker>COLE</speaker>
+	      <mode></mode>
+	      <context>But RAILLY'S total attention is on their dilemma.</context>
+	      <utterance>I've seen that...before.</utterance>
+	   <speaker>RAILLY</speaker>
+	      <mode></mode>
+	      <context>Very confused, COLE lets her drag him along the sidewalk, past ONLOOKERS. She looks crazier than he does. ANGLE ON THE CHEVY, making a sudden, urgent u-turn, almost colliding with a passing car. BRAKES SQUEAL and a HORN BLARES.</context>
+	      <utterance>James, trust me. We're in terrible trouble. We have to run.</utterance>
+	</dialogue>
+	<!-- 32 others after -->
+</movie>
