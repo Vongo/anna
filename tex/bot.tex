@@ -160,7 +160,13 @@ For the second release of the project we use likelihood to determine the best ty
 The first step is to run through all dialogues in our corpus and compute for each sequence of sentence's type the probabilities of the types of the following sentence. To do so we first start by computing probabilities with a sequence of length 1 meaning for each possible sentence's types (affirmative positive, affirmative negative, interrogative positive...) we look at the types of the following sentences and compute probability of occurrence for each type. Then we repeat the process for a sequence of length 2 (affirmative positive - affirmative negative, affirmative positive - interrogative positive...) then sequence of length 3 and so on.\\
 The results are stored as a graph where each node represent a sentence's type associated with its probability of occurrence given previous sentence's type represented by its ancestors in the tree.\\
 Figure \ref{fig:stats} displays a 3-depth graph of probabilities in which we can see that, after the sequence \say{affirmative positive -- interrogative positive}, the probability of the SentenceType \say{affirmative positive} is of 69\%.\\
-Then when Anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue.
-
+Then when Anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue. It results on conversations which are correctly structured. See figure \ref{fig:convST} for a creepy example.
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.80\textwidth]{./img/convST.png}
+\end{center}
+\caption{Conversation from V2}
+\label{fig:convST}
+\end{figure}
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}
