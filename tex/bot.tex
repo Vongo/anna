@@ -10,7 +10,7 @@ We considered 2 options : a traditional DBMS such as MySQL or a graph-oriented D
 \item It supports indexes and unique constraints
 \item Most of the graph-based systems implements useful algorithms such as the shortest path between two nodes.
 \end{itemize}
-Regarding the technology, Neo4j\footnote{http://neo4j.com/} was chosen in regards of those facts :\\
+Regarding the technology, Neo4j\footnote{http://neo4j.com/} was chosen in regards of those facts :
 \begin{itemize}
 \item One of us (Mael) was already working with it for his MasterArbeit and was familiar with the language used to build Neo4j queries (Cypher).
 \item Neo4j is cross-platform
@@ -34,10 +34,10 @@ Basically we can say that in our case, one vertex equals one XML tag. Instead of
 With the above example we see that, just like in the XML (Code \ref{code:extr}), a \textbf{Movie} (pink) \textit{IS\_COMPOSED\_OF} \textbf{Dialogues} (gray, only one displayed here) which \textit{IS\_COMPOSED\_OF} several \textbf{Sentences} (green). Each sentence \textit{IS\_SPOKEN\_BY} a \textbf{Character} (purple).\\
 We store the full sentence as an attribute of the Sentence node. The labels of the dialogues and sentences are an aggregation of the id fields of their parents :
 \begin{center}Sentence\_Node\_id = idMovie\_idDialogue\_idSentence \end{center}
-Now that we have represented the corpus as a graph, we can start to work with the NLP technology. Each sentence his processed and we use the nltk library to tokenize and tag all sentences in our corpus. The purpose of the processing is to identify for each sentence its type and the most relevant tokens. These informations will be then used by anna to answer with the sentence wich is the most relevant given previous sentences.\\
-We identify four categories of sentence : interrogative, exclamative, affirmative and greeting. Moreover a sentence can be either negative or positive. To determine if a sentence is interrogative or exclamative we check the presence of a question mark (?) or a exclamation point (!) at the end of the sentence. If no such marks is found we assume that the sentence is affirmative. To determine if a sentence is negative we check if the sentence contain a \say{n't} token. Finally to detect a greeting we check if the sentence contain keywords such as \say{Hi}, \say{Hello}, \say{Good Morning} \dots
-Regarding the tokens we assume tokens tagged as noun and verb are the most relevant to understant the meaning of the sentence and thus we only keep these and eliminate others.\\
-The figure 14 illustate the informations stored in the database.
+Now that we have represented the corpus as a graph, we can start to work with the NLP technology. Each sentence is processed and we use the nltk library to tokenize and tag all sentences in our corpus. The purpose of the processing is to identify for each sentence its type and the most relevant tokens. These informations will be then used by anna to answer with the sentence wich is the most relevant given previous sentences.\\
+We identify four categories of sentence : interrogative, exclamative, affirmative and greeting. Moreover a sentence can be either negative or positive. To determine if a sentence is interrogative or exclamative we check the presence of a question mark (?) or a exclamation point (!) at the end of the sentence. If no such marks is found we assume that the sentence is affirmative. To determine if a sentence is negative we check if the sentence contain a \say{n't} token. Finally to detect a greeting we check if the sentence contain keywords such as \say{Hi}, \say{Hello}, \say{Good Morning}\dots\\
+Regarding the tokens we assume tokens tagged as noun and verb are the most relevant to understand the meaning of the sentence and thus we only keep these and eliminate others.\\
+The figure \ref{fig:sent} illustrate the informations stored in the database.
 
 \begin{figure}[!h]
 \begin{center}
@@ -149,19 +149,18 @@ This results on conversations which make no sense at all, see Figure \ref{fig:co
 \end{figure}
 \subsubsection{Version 2 : Determined SentenceType}
 \label{sssec:v_stype}
-
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=0.80\textwidth]{./img/stats.png}
+\includegraphics[width=0.6\textwidth]{./img/stats.png}
 \end{center}
-\caption{Statistics tree}
+\caption{Probabilities tree}
 \label{fig:stats}
 \end{figure}
-
 For the second release of the project we use likelihood to determine the best type of sentence to answer.\\
-The first step is to run through all dialogues in our corpus and compute for each sequence of sentence's type the probabilities of the types of the following sentence. To do so we first start by computing probabilities whith a sequence of length 1 meaning for each possible sentence's types (affirmative positive, affirmative negative, interrogative positive...) we look at the types of the following sentences and compute probability of occurence for each type. Then we repeat the process for a sequence of length 2 (affirmative positive - affirmative negative, affirmative positive - interrogative positive...) then sequence of length 3 and so on.\\
-The results are stored as a graph where each node represent a sentence's type associated with its probability of occurrence given previous sentence's type representend by its ancestors in the tree.\\
-Then when anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue.
+The first step is to run through all dialogues in our corpus and compute for each sequence of sentence's type the probabilities of the types of the following sentence. To do so we first start by computing probabilities with a sequence of length 1 meaning for each possible sentence's types (affirmative positive, affirmative negative, interrogative positive...) we look at the types of the following sentences and compute probability of occurrence for each type. Then we repeat the process for a sequence of length 2 (affirmative positive - affirmative negative, affirmative positive - interrogative positive...) then sequence of length 3 and so on.\\
+The results are stored as a graph where each node represent a sentence's type associated with its probability of occurrence given previous sentence's type represented by its ancestors in the tree.\\
+Figure \ref{fig:stats} displays a 3-depth graph of probabilities in which we can see that, after the sequence \say{affirmative positive -- interrogative positive}, the probability of the SentenceType \say{affirmative positive} is of 69\%.\\
+Then when Anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue.
 
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}

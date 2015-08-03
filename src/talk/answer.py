@@ -20,10 +20,10 @@ class AnswerEngineAPI(object):
         db.insert(userLine, tokTypesUser) #timeout
 
         # Random version
-        sentence = self.getRandomAnswer()
+        # sentence = self.getRandomAnswer()
 
         # Good SentenceType version
-        # sentence = self.getAnswerWithGoodSentenceType(5,3)
+        sentence = self.getAnswerWithGoodSentenceType(5,3)
 
         # Good SentenceType + movie category version
         # sentence = self.getAnswerWithGoodSentenceTypeAndCategory(5,3)
