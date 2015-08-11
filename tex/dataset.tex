@@ -60,14 +60,14 @@ The corpus consist on a XML document of 2,249,053 lines, its structure isn't so 
 This dialogue is pulled out the \say{xXx} movie\footnote{xXx on IMDB : http://www.imdb.com/title/tt0295701/} produced in 2002 by Rob Cohen.
 \subsubsection{Remarks}
 This dataset is really interesting but some details rose small issues during the project.\\
-First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a succession of tags which follows a specific patern :
+First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a succession of tags which follows a specific pattern :
 \begin{enumerate}
 \item Speaker : who is speaking ?
 \item Mode : is he happy/suspicious/\dots ?
 \item Context : description of the shot
 \item Utterence : the speaker's speech
 \end{enumerate}
-We found it strange that all those 4 tags aren't childs of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's childs and group every group of 4 tags together in a single entity.\\
+We found it strange that all those 4 tags aren't children of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's children and group every group of 4 tags together in a single entity.\\
 Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section \ref{ssec:enrich}). \\
 Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
 \subsection{Enrichments}
@@ -89,7 +89,7 @@ The \say{Genre} field is also used in one of our chatbot version, see section \r
 \label{par:Motivation}
 The idea which lays behind these statistics is to get a better understanding of the data we added to the corpus.
 In this section, we are going to stress our data, aggregate it, and try to extract some meaning.
-We have no pretention to be cinema experts, and there are obvious bias to any statistics which would be built on this data :
+We have no pretension to be cinema experts, and there are obvious bias to any statistics which would be built on this data :
 \begin{itemize}
     \item First, we are working on a dataset which contains data about less than a thousand movies.
     This is a lot, but at the same time, this is very few, when you know that more than 1450 movies have had an international publication in 2014.
@@ -112,7 +112,7 @@ Directors rankings that follow in Figures~\ref{fig:bestDirectors}~and~\ref{fig:w
 They only represent how the ImDB users rated these directors' movies (the ones that are in our dataset, if there are at least two movies for each director in the dataset).
 Although they are quite consistent with global directors' fame, we cannot help noticing that Brian de Palma, who is quite famous for movies such as \textit{Scarface} or \textit{The incorruptibles}, is ranked very poorly.
 This is because, although his movies are famous, they are not always highly rated.
-We could have expected the same from Steven Spielberg's movies, which are also quite mainstream, but the latter is, on the contrary, among the most successfull directors.
+We could have expected the same from Steven Spielberg's movies, which are also quite mainstream, but the latter is, on the contrary, among the most successful directors.
 That's one downside of the movie sampling that was made to build this dataset.
 
 \begin{figure}[!h]
@@ -163,7 +163,7 @@ This is of course also a biased result, because most of the movies in the datase
 \label{subs:Ratings}
 
 Is \textit{the old better than the new} ? Not for movies, at least.
-Although we would have expected some bias that would play in favour of old movies (Selection\footnote{The movies in this dataset were obviously selected for their diversity, but also for their quality : for an old movie not to be forgotten, it takes more than for a recent one.},
+Although we would have expected some bias that would play in favor of old movies (Selection\footnote{The movies in this dataset were obviously selected for their diversity, but also for their quality : for an old movie not to be forgotten, it takes more than for a recent one.},
  \textit{Hipstering}, Quantity), it seems that the average rating is getting better with time (see Figure~\ref{fig:ratingEvolution})
 How to interpret that ? Well, an interesting phenomenon is that when you look at the all-time best movies ranking on ImDB, the top movies are either very old, or, most of the time, very recent.
 The very old thing can be explained by the combination of two phenomenon :
@@ -173,7 +173,7 @@ The very old thing can be explained by the combination of two phenomenon :
     \item Hipstering : for some reason, it is \textit{cool} to like old movies and to promote them as better than the recent blockbusters, which are so \textit{mainstream}.
 \end{itemize}
 On the other hand, the fact that recent movies are well rated can be explained with a more psychological approach : people tend to like what is new.
-Besides, the novelty of a movie like \textit{Avatar} (J.Cameron, 2009) was the mind-blowing special effects, which seem now quite dipappointing, even though the critics were dithyrambic at the time.
+Besides, the novelty of a movie like \textit{Avatar} (J.Cameron, 2009) was the mind-blowing special effects, which seem now quite disappointing, even though the critics were dithyrambic at the time.
 For a movie to survive old-fashioned special effects, it takes talent (Confer the fist \textit{Star Wars} trilogy).
 That's why recent blockbusters are often disavowed a few years later.
 
@@ -216,7 +216,7 @@ By proceeding a simple least-square linear regression, we can say that the trend
 \label{subs:Genre}
 
 We can see in Figure~\ref{fig:rateByGenre} that usually, the best ratings are given to movies that deal with serious topics (\textit{History}, \textit{Biography}, \textit{War}).
-On the other hand, large-audience topics, such as \textit{Horror} or \textit{Action} movies, or \textit{Comedies}, even though they are very popular, seem to be evaluated as less "good" by the audience.
+On the other hand, large-audience topics, such as \textit{Horror} or \textit{Action} movies, or \textit{Comedies}, even though they are very popular, seem to be evaluated as less \say{good} by the audience.
 One surprising result is that \textit{Documentaries} are unexpectedly low in this ranking, when the popular \textit{Drama} is quite high.
 
 \begin{figure}[!h]
@@ -275,8 +275,8 @@ But they are quite consistent with global actors' fame.
 
 \newpage
 Figure~\ref{fig:coocActors} represents the network of actors playing together.
-We can see that there is a very hudge connected component in the center of the graph, built around famous actors like Robert de Niro or Georges Clooney.
-On the other hand, there is a lot of little independant cliques (for instance, there is one composed of Levar Burton, Patrick Stewart, Jonathan Frakes and Brent Spiner).
+We can see that there is a very huge connected component in the center of the graph, built around famous actors like Robert de Niro or Georges Clooney.
+On the other hand, there is a lot of little independent cliques (for instance, there is one composed of Levar Burton, Patrick Stewart, Jonathan Frakes and Brent Spiner).
 They represent actors who played together but not with other actors.
 The theory behind this kind of graph is very strong\footnote{Thanks to \textit{Six Degrees of Kevin Bacon(}$https://en.wikipedia.org/wiki/Six\_Degrees\_of\_Kevin\_Bacon$\textit{)and many movie fans.}}.
 Thus we know that this graph should be fully-connected, thanks to less-famous actors, who get minor roles in many movies.
