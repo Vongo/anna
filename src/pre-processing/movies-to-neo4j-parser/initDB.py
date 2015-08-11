@@ -54,7 +54,7 @@ def create_sentence_types(graph):
     graph.create(greet)
 
 def parseMoviesXML(graph):
-    tree = ET.parse('../../../data/3movies.xml')
+    tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
@@ -115,7 +115,7 @@ def parseMoviesXML(graph):
                     graph.create_unique(is_of_type)
 
                 for token in tokensAndType[0]:
-                    token = Node("Token", token=token)
+                    token = Node("Token", token=token[0], tag=token[1])
                     is_composed_of = Relationship(currentSentence, "is_composed_of", token)
                     graph.create_unique(is_composed_of)
 
