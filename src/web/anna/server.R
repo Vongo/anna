@@ -23,19 +23,44 @@ shinyServer(function(input, output, session) {
 		paste("<b>",as.character(Sys.time()),", ",user," said</b> : ",quote, sep="")
 	}
 
-	replace.username <- function(sentence, rep=input$userName) {
-		if (grepl("USER", sentence)){
-			dec <- strsplit(sentence,"USER")
-			left <- dec[[1]][1]
-			right <- dec[[1]][2]
-			paste(left,rep,right,sep="")
+	replace.names <- function(sentence) {
+		replace.username <- function(sentence, rep=input$userName) {
+			if (grepl("USERNAME", sentence)){
+				dec <- strsplit(sentence,"USERNAME")
+				left <- dec[[1]][1]
+				right <- dec[[1]][2]
+				paste(left,rep,right,sep="")
+			}
+			else sentence
 		}
-		else sentence
+		replace.anna <- function(sentence, rep="Anna") {
+			if (grepl("ANNA", sentence)){
+				dec <- strsplit(sentence,"ANNA")
+				left <- dec[[1]][1]
+				right <- dec[[1]][2]
+				paste(left,rep,right,sep="")
+			}
+			else sentence
+		}
+		replace.easter <- function(sentence, rep="Behrang") {
+			if (grepl("EASTER", sentence)){
+				dec <- strsplit(sentence,"EASTER")
+				left <- dec[[1]][1]
+				right <- dec[[1]][2]
+				paste(left,rep,right,sep="")
+			}
+			else sentence
+		}
+
+		sentence <- replace.username(sentence)
+		sentence <- replace.anna(sentence)
+		replace.easter(sentence)
 	}
+
 
 	anna.answers <- function(userLine, history=NULL) {
 		answer <- source(API_PATH,chdir=T)$value(userLine,input$categories)
-		answer <- replace.username(answer)
+		answer <- replace.names(answer)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}
@@ -43,7 +68,7 @@ shinyServer(function(input, output, session) {
 	anna.says.hi <- function() {
 		python.load(paste(PYTHON_ANSWER_DIR,"/test.py",sep=""))
 		answer <- sample(python.get("hi"),1)
-		answer <- replace.username(answer)
+		answer <- replace.names(answer)
 		newLine <- formulate("ANNA", answer)
 		HISTORY <<- c(HISTORY, newLine)
 	}

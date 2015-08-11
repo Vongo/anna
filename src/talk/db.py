@@ -48,14 +48,14 @@ def insert(sentence, tokensAndType):
 	else:
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
-		
+
 	for token in tokensAndType[0]:
 		tokenNode = graph.find_one("Token",
 							   property_key="token",
 							   property_value = token)
 		if tokenNode is None:
 			tokenNode = Node("Token", token=token)
-		
+
 		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
 
@@ -63,10 +63,10 @@ def clean_histo():
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-()  DELETE rels, n")
-	
+
 def get_sentencesMovieCharacters(sentenceId):
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 	query = "MATCH (n:Sentence{id:{sentenceId}})<-[r:IS_COMPOSED_OF*2]-(m:Movie), (m:Movie)-[:IS_COMPOSED_OF*2]->(:Sentence)-[IS_SPOKEN_BY]->(c:Character) RETURN COLLECT(DISTINCT c.full_name) as chars"
-	results = graph.cypher.execute(query, sentenceId=sentenceId)
-	return results.chars
+	results = graph.cypher.execute_one(query, sentenceId=sentenceId)
+	return results
