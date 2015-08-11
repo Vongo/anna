@@ -28,10 +28,10 @@ class AnswerEngineAPI(object):
             if sentence is None:
                 # Random version
                 sentence = self.getRandomAnswer()
-
-        tokTypes = histo.getTokensAndType(sentence)
-        db.insert(sentence, tokTypes) #timeout
-        return sentence
+        chars = db.get_sentencesMovieCharacters(sentence[1]) #[1] = sentence id
+        tokTypes = histo.getTokensAndType(sentence[0]) #[0] = full sentence
+        db.insert(sentence[0], tokTypes) #timeout
+        return sentence[0]
 
     def getRandomAnswer(self):
         print "In Random"
@@ -51,7 +51,7 @@ class AnswerEngineAPI(object):
         except:
             act = "FAIL"
             raise
-        return act.properties["full_sentence"]
+        return act.properties["full_sentence"], act.properties["id"]
 
     def findNextSentenceType(self,lenghtHisto, depthHisto):
         server = GraphServer("../../../neo4j")
@@ -82,14 +82,14 @@ class AnswerEngineAPI(object):
         labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
         print labels
         # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}) RETURN n LIMIT 25
-        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) RETURN n.full_sentence AS sentence LIMIT 100"
+        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) RETURN n.full_sentence AS sentence, n.id AS id LIMIT 100"
         records = graph.cypher.execute(sentencesQuery)
         if len(records) == 0:
             return None
         else:
             index = random.randint(0,len(records))
-            print records[index].sentence
-            return records[index].sentence
+            print records[index]
+            return (records[index].sentence,records[index].id)
 
     def getAnswerWithGoodSentenceTypeAndCategory(self, lenghtHisto, depthHisto, categoryString):
         print "In SentenceType + Category"
@@ -101,14 +101,17 @@ class AnswerEngineAPI(object):
         # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
         # (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(:Movie)-[:IS_OF_TYPE]->(:Category{label:'Crime'})
         # RETURN n.full_sentence AS sentence
-        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}), (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(m:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) RETURN m.title AS movie_title,n.full_sentence AS sentence LIMIT 100"
+        sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}), (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(m:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}) RETURN m.title AS movie_title,n.full_sentence AS sentence, n.id AS id LIMIT 100"
         records = graph.cypher.execute(sentencesQuery)
         if len(records) == 0: # No sentences matching the query
             return None
         else:
             index = random.randint(0,len(records))
             print records[index]
-            return records[index].sentence
+            return (records[index].sentence,records[index].id)
+
+    def getAnswerWithGoodSentenceTypeAndCategoryAndSemanticRelevancy(self):
+        return None
 
 def getAnswer(userLine, category):
     anna = AnswerEngineAPI()

@@ -64,3 +64,9 @@ def clean_histo():
 	graph=server.graph
 	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-()  DELETE rels, n")
 	
+def get_sentencesMovieCharacters(sentenceId):
+	server = GraphServer("../../../neo4j")
+	graph=server.graph
+	query = "MATCH (n:Sentence{id:{sentenceId}})<-[r:IS_COMPOSED_OF*2]-(m:Movie), (m:Movie)-[:IS_COMPOSED_OF*2]->(:Sentence)-[IS_SPOKEN_BY]->(c:Character) RETURN COLLECT(DISTINCT c.full_name) as chars"
+	results = graph.cypher.execute(query, sentenceId=sentenceId)
+	return results.chars
