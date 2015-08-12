@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import nltk;
 from py2neo import Graph, Node, Relationship
 from py2neo.server import GraphServer
 import random, sys
@@ -7,6 +7,7 @@ sys.path.insert(0, '../talk')
 sys.path.insert(0, '../../talk')
 import histo
 import db
+import names
 
 class AnswerEngineAPI(object):
     """Defines the contract for requesting an answer given a dialogue history and a user's answer."""
@@ -30,8 +31,9 @@ class AnswerEngineAPI(object):
                 sentence = self.getRandomAnswer()
         chars = db.get_sentencesMovieCharacters(sentence[1]) #[1] = sentence id
         tokTypes = histo.getTokensAndType(sentence[0]) #[0] = full sentence
-        db.insert(sentence[0], tokTypes) #timeout
-        return sentence[0]
+        sentenceWithNames = names.makeSentenceWithNames(chars, nltk.word_tokenize(sentence[0]))
+        db.insert(sentenceWithNames, tokTypes) #timeout
+        return sentenceWithNames
 
     def getRandomAnswer(self):
         print "In Random"
@@ -93,6 +95,8 @@ class AnswerEngineAPI(object):
         graph = server.graph
         distribution = db.computeHistoTokenFrequency(lenghtHisto)
         return None
+
+
 
 def getAnswer(userLine, category):
     anna = AnswerEngineAPI()
