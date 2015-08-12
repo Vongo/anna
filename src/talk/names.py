@@ -54,7 +54,7 @@ def replaceNames(names, utterance):
                 pS = replaceNames(names, after)
                 break
     else :
-        return replaceNameInProposition(names, pP)
+        return [replaceNameInProposition(names, pP), sep]
     return [replaceNameInProposition(names, pP), sep, replaceNameInProposition(names, pS)]
 
 def flatten(*args):
