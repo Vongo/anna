@@ -68,5 +68,33 @@ def get_sentencesMovieCharacters(sentenceId):
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 	query = "MATCH (n:Sentence{id:{sentenceId}})<-[r:IS_COMPOSED_OF*2]-(m:Movie), (m:Movie)-[:IS_COMPOSED_OF*2]->(:Sentence)-[IS_SPOKEN_BY]->(c:Character) RETURN COLLECT(DISTINCT c.full_name) as chars"
-	results = graph.cypher.execute(query, sentenceId=sentenceId)
-	return results.chars
+	results = graph.cypher.execute_one(query, sentenceId=sentenceId)
+	return results
+
+def findNextSentenceType(lenghtHisto, depthHisto):
+    server = GraphServer("../../../neo4j")
+    graph = server.graph
+    types =graph.cypher.execute("MATCH (n:Histo)-[r*0.."+str(lenghtHisto)+"]->(sh:SentenceHisto)-[is_of_type]->(st:SentenceType) RETURN st.label AS label")
+    # Build SentenceType "path"
+    listTypes=[]
+    for i in range(len(types)/2):
+        listTypes.append(types[2*i+1].label +' ' + types[2*i].label)
+
+    # Sublist with the good length
+    if len(listTypes) > depthHisto:
+        queryTypes = listTypes[-depthHisto:]
+    else:
+        queryTypes = listTypes
+    # Model query :
+    queryString= "MATCH (s:Stats)"
+    for label in queryTypes:
+        queryString+="-->(:TypeStat{label:\'" + label +"\'})"
+    queryString+="-->(ts:TypeStat) RETURN ts.label AS label ORDER BY ts.prob DESC LIMIT 1"
+    nextType = graph.cypher.execute(queryString)
+    return nextType[0].label
+
+def computeHistoTokenFrequency(lenghtHisto):
+	server = GraphServer("../../../neo4j")
+    graph = server.graph
+	query = "MATCH (n:Histo)-[:is_followed_by*0..{lenghtHisto}]->(sh:SentenceHisto)-[:is_composed_of]->(t:Token) RETURN t.token,count(t) as total ORDER by total desc LIMIT 10"
+	return  graph.cypher.execute(query, lenghtHisto=lenghtHisto)

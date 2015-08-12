@@ -53,33 +53,11 @@ class AnswerEngineAPI(object):
             raise
         return act.properties["full_sentence"], act.properties["id"]
 
-    def findNextSentenceType(self,lenghtHisto, depthHisto):
-        server = GraphServer("../../../neo4j")
-        graph = server.graph
-        types =graph.cypher.execute("MATCH (n:Histo)-[r*0.."+str(lenghtHisto)+"]->(sh:SentenceHisto)-[is_of_type]->(st:SentenceType) RETURN st.label AS label")
-        # Build SentenceType "path"
-        listTypes=[]
-        for i in range(len(types)/2):
-            listTypes.append(types[2*i+1].label +' ' + types[2*i].label)
-
-        # Sublist with the good length
-        if len(listTypes) > depthHisto:
-            queryTypes = listTypes[-depthHisto:]
-        else:
-            queryTypes = listTypes
-        # Model query :
-        queryString= "MATCH (s:Stats)"
-        for label in queryTypes:
-            queryString+="-->(:TypeStat{label:\'" + label +"\'})"
-        queryString+="-->(ts:TypeStat) RETURN ts.label AS label ORDER BY ts.prob DESC LIMIT 1"
-        nextType = graph.cypher.execute(queryString)
-        return nextType[0].label
-
     def getAnswerWithGoodSentenceType(self, lenghtHisto, depthHisto):
         print "In SentenceType"
         server = GraphServer("../../../neo4j")
         graph = server.graph
-        labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
+        labels = db.findNextSentenceType(lenghtHisto,depthHisto).split()
         print labels
         # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}) RETURN n LIMIT 25
         sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}) RETURN n.full_sentence AS sentence, n.id AS id LIMIT 100"
@@ -95,7 +73,7 @@ class AnswerEngineAPI(object):
         print "In SentenceType + Category"
         server = GraphServer("../../../neo4j")
         graph = server.graph
-        labels = self.findNextSentenceType(lenghtHisto,depthHisto).split()
+        labels = db.findNextSentenceType(lenghtHisto,depthHisto).split()
         print labels
         # MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:'affirmative'}),
         # (n:Sentence)-[:is_of_type]->(:SentenceType{label:'positive'}),
@@ -110,7 +88,10 @@ class AnswerEngineAPI(object):
             print records[index]
             return (records[index].sentence,records[index].id)
 
-    def getAnswerWithGoodSentenceTypeAndCategoryAndSemanticRelevancy(self):
+    def getAnswerWithGoodSentenceTypeAndCategoryAndSemanticRelevancy(self, lenghtHisto):
+        server = GraphServer("../../../neo4j")
+        graph = server.graph
+        distribution = db.computeHistoTokenFrequency(lenghtHisto)
         return None
 
 def getAnswer(userLine, category):
