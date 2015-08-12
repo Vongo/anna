@@ -1,4 +1,4 @@
-separators = [".","that",":",";","?","!",",","what","-"]
+separators = [".","that",":",";","?","!",",","what","-","..."]
 MYSELF_NEAT_IDS = [["My", "name", "is"], ["my", "name", "is"]]
 MYSELF_COMP_IDS = [["I", "am"]]
 
