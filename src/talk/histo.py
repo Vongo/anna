@@ -6,10 +6,11 @@ def getTokensAndType(sentence):
 	allTokens = nltk.word_tokenize(sentence)
 	tagged = nltk.pos_tag(allTokens)
 	tokens = []
+	nnp = []
 	for key, tag in enumerate(tagged):
 		if tag[1].startswith('NNP'):
 			if tagged[key-1][0] != '!' and tagged[key-1][0] != '.' and tagged[key-1][0] != '?' and key != 0:
-				tokens.append([tag[0], tag[1]])
+				nnp.append([tag[0], tag[1]])
 		elif tag[1].startswith('NN') or tag[1].startswith('VB') or tag[1].startswith('PRP') or tag[0] == "that":
 			tokens.append([tag[0], tag[1]])
 
@@ -31,4 +32,4 @@ def getTokensAndType(sentence):
 	if greet:
 		sentenceType.append('greeting')
 
-	return tokens, sentenceType;
+	return tokens, sentenceType, nnp;
