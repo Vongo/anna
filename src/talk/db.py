@@ -95,6 +95,6 @@ def findNextSentenceType(lenghtHisto, depthHisto):
 
 def computeHistoTokenFrequency(lenghtHisto):
 	server = GraphServer("../../../neo4j")
-    graph = server.graph
+	graph = server.graph
 	query = "MATCH (n:Histo)-[:is_followed_by*0..{lenghtHisto}]->(sh:SentenceHisto)-[:is_composed_of]->(t:Token) RETURN t.token,count(t) as total ORDER by total desc LIMIT 10"
 	return  graph.cypher.execute(query, lenghtHisto=lenghtHisto)

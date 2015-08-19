@@ -10,7 +10,7 @@ def getTokensAndType(sentence):
 	for key, tag in enumerate(tagged):
 		if tag[1].startswith('NNP'):
 			if tagged[key-1][0] != '!' and tagged[key-1][0] != '.' and tagged[key-1][0] != '?' and key != 0:
-				nnp.append([tag[0], tag[1]])
+				nnp.append(tag[0])
 		elif tag[1].startswith('NN') or tag[1].startswith('VB') or tag[1].startswith('PRP') or tag[0] == "that":
 			tokens.append([tag[0], tag[1]])
 

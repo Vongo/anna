@@ -31,7 +31,7 @@ class AnswerEngineAPI(object):
                 sentence = self.getRandomAnswer()
         chars = db.get_sentencesMovieCharacters(sentence[1]) #[1] = sentence id
         tokTypes = histo.getTokensAndType(sentence[0]) #[0] = full sentence
-        sentenceWithNames = names.makeSentenceWithNames(chars, nltk.word_tokenize(sentence[0]))
+        sentenceWithNames = names.makeSentenceWithNames(chars+tokTypes[2], nltk.word_tokenize(sentence[0]))
         db.insert(sentenceWithNames, tokTypes) #timeout
         return sentenceWithNames
 
