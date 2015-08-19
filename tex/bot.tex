@@ -170,3 +170,31 @@ Then when Anna is speaking with an user we use these statistics to answer a sent
 \end{figure}
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}
+This version propose a new feature which allows the user to choose which kind of movie should be queried by Anna. The movies' categories have been added to the dataset through the OMDb API, see \ref{ssec:enrich} for more details about the API and the enrichment process.\\
+The user can modify the chosen category at anytime since the drop-down list is available on the discussion page of the UI.
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.80\textwidth]{./img/convCat.png}
+\end{center}
+\caption{Movie's genre selection}
+\label{fig:convST}
+\end{figure}
+
+\subsubsection{Version 4 : Replace proper nouns} % (fold)
+\label{ssub:version_4_replace_proper_nouns}
+On of the NLP application we wanted to try with this tool was to build generic sentences.\\
+Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concern the NLP library : \textbf{LEO}
+Then, we figured out that replacing proper nouns isn't that simple : it depends of the structure of the sentence. For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP but we can't replace them with the same value, it would make no sense. We had to split the initial utterance into sub-phrases. This was achieved by detecting the presence of a grammatical separator \textbf{INSERER LISTE ADRIAN}.\\
+Once we isolated the sub-phrases, we determined if the NNP was the subject of the sentence (\say{I'm Bob !}), if someone is talking to him (\say{Hello Jack,}) or if he's a third party (\say{What do you think about our friend Lola ?}). Given these three cases, we replaced as follows :
+\begin{description}
+    \item[Case 1 : Subject] NNP becomes \say{Anna}.
+    \item[Case 2 : Interlocutor] NNP becomes \say{USERNAME}
+    \item[Case 3 : Third party] NNP becomes \say{Behrang}
+\end{description}
+\textbf{INSERER FIGURE}
+% subsubsection version_4_replace_proper_nouns (end)
+
+\subsubsection{Version 5 : Tokens frequency} % (fold)
+\label{ssub:version_5_tokens_frequency}
+\textbf{TODO} \textbf{TODO} \textbf{TODO} \textbf{TODO}
+% subsubsection version_5_tokens_frequency (end)
