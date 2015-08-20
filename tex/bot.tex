@@ -5,18 +5,18 @@ It seems obvious that browsing our 2,249,053 lines-long corpus for each query wa
 \subsubsection{Chosen technology}
 We considered 2 options : a traditional DBMS such as MySQL or a graph-oriented DBMS. We finally chose to use a graph model for several reasons :
 \begin{itemize}
-\item For a corpus such as ours, with a lot of n-1..n relations, a graph allows the user to build queries who look like \say{paths}. It is both more efficient (no table join, less computation time) and more natural for the user.
-\item Graph-base DBMS doesn't require a rigid schema, which means that we can create new kind of entities and relationships \say{on the go}.
-\item It supports indexes and unique constraints
-\item Most of the graph-based systems implements useful algorithms such as the shortest path between two nodes.
+\item For a corpus such as ours, with a lot of n-1..n relations, a graph allows the user to build queries which look like \say{paths}. It is both more efficient (no table join, less computation time) and more natural for the user.
+\item Graph-base DBMS doesn't require a rigid schema, which means that we can create new kinds of entities and relationships \say{on the go}.
+\item It supports indexes and unique constraints.
+\item Most of the graph-based systems implement useful algorithms such as the shortest path between two nodes.
 \end{itemize}
 Regarding the technology, Neo4j\footnote{http://neo4j.com/} was chosen in regards of those facts :
 \begin{itemize}
 \item One of us (Mael) was already working with it for his MasterArbeit and was familiar with the language used to build Neo4j queries (Cypher).
-\item Neo4j is cross-platform
-\item The community is strong, there're even french groups
+\item Neo4j is cross-platform.
+\item The community is strong, there are even french groups.
 \item The technology is mature, 15 years old and currently running version 2.2
-\item It provides a nice browser interface
+\item It provides a nice browser interface.
 \end{itemize}
 
 \subsubsection{Structure}
@@ -147,6 +147,7 @@ This results on conversations which make no sense at all, see Figure \ref{fig:co
 \caption{Random conversation from V1}
 \label{fig:convRandom}
 \end{figure}
+
 \subsubsection{Version 2 : Determined SentenceType}
 \label{sssec:v_stype}
 \begin{figure}[!h]
@@ -168,29 +169,37 @@ Then when Anna is speaking with an user we use these statistics to answer a sent
 \caption{Conversation from V2}
 \label{fig:convST}
 \end{figure}
+
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}
 This version propose a new feature which allows the user to choose which kind of movie should be queried by Anna. The movies' categories have been added to the dataset through the OMDb API, see \ref{ssec:enrich} for more details about the API and the enrichment process.\\
-The user can modify the chosen category at anytime since the drop-down list is available on the discussion page of the UI.
+The user can modify the chosen category at any time since the drop-down list is available on the discussion page of the UI.
 \begin{figure}[!h]
 \begin{center}
 \includegraphics[width=0.80\textwidth]{./img/convCat.png}
 \end{center}
 \caption{Movie's genre selection}
-\label{fig:convST}
+\label{fig:convCat}
 \end{figure}
 
 \subsubsection{Version 4 : Replace proper nouns} % (fold)
 \label{ssub:version_4_replace_proper_nouns}
-On of the NLP application we wanted to try with this tool was to build generic sentences.\\
-Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concern the NLP library : \textbf{LEO}
-Then, we figured out that replacing proper nouns isn't that simple : it depends of the structure of the sentence. For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP but we can't replace them with the same value, it would make no sense. We had to split the initial utterance into sub-phrases. This was achieved by detecting the presence of a grammatical separator \textbf{INSERER LISTE ADRIAN}.\\
-Once we isolated the sub-phrases, we determined if the NNP was the subject of the sentence (\say{I'm Bob !}), if someone is talking to him (\say{Hello Jack,}) or if he's a third party (\say{What do you think about our friend Lola ?}). Given these three cases, we replaced as follows :
+One of the NLP applications we wanted to try with this tool was to build generic sentences.\\
+Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concerned NLP library : \textbf{LEO}
+Then, we figured out that replacing proper nouns isn't that simple: it depends of the structure of the sentence.
+For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP (Jack, Bob and Lola) but we can't replace them with the same value, it would make no sense.
+We had to split the initial utterance into sub-sentences, or naive propositions.
+This was done by detecting the presence of a grammatical separators such as "\textbf{.}", "\textbf{that}", "\textbf{:}", "\textbf{;}", "\textbf{?}", "\textbf{!}", "\textbf{,}", "\textbf{what}", "\textbf{-}" or "\textbf{...}".\\
+Once we isolated the sub-sentences, we determined whether the NNP was the subject of the sentence (\say{I'm Bob !}), if someone is talking to him (\say{Hello Jack,}) or if he's a third party (\say{What do you think about our friend Lola ?}).
+Given these three cases, we replaced as follows :
 \begin{description}
-    \item[Case 1 : Subject] NNP becomes \say{Anna}.
+    \item[Case 1 : Subject] NNP becomes \say{ANNA}.
     \item[Case 2 : Interlocutor] NNP becomes \say{USERNAME}
-    \item[Case 3 : Third party] NNP becomes \say{Behrang}
+    \item[Case 3 : Third party] NNP becomes \say{EASTER}
 \end{description}
+Then the interface engine replaces those special chars by matching ones.
+Note that \textit{ANNA} always becomes "Anna", so we could have avoided this step for this token.
+But we thought it was important to separate the grammatical identification of the NNP from the replacement with the proper noumns.
 \textbf{INSERER FIGURE}
 % subsubsection version_4_replace_proper_nouns (end)
 
