@@ -37,8 +37,15 @@ def replaceNameInProposition(names, proposition):
         if len(index) > 0 :
             return replaceWith(proposition, foundName, "ANNA")
             break
+    for id in MYSELF_COMP_IDS :
+        index = [(i, i+len(id)) for i in range(len(proposition)) if proposition[i:i+len(id)] == id]
+        if len(index) > 0:
+            if len(proposition) >= index[0][1] :
+                if proposition[index[0][1]] == foundName:
+                    return replaceWith(proposition, foundName, "ANNA")
+                    break
     else :
-        if 'you' in proposition :
+        if 'you' in proposition or len(proposition)==1:
             return replaceWith(proposition, foundName, "USERNAME")
         else :
             return replaceWith(proposition, foundName, "EASTER")
@@ -72,7 +79,7 @@ def makeSentenceWithNames(names, utterance):
     s_as_flat_list = flatten(s_as_list)
     return " ".join(s_as_flat_list)
 
-# utterance = "My name is Robert , and I fuck you . Yes , Michel , you heard me : I fuck you ! It means that your mother is a slut like Jacquie !".split(" ")
+# utterance = "My name is Robert , I am Robert , I am a Robert , and I hate you . Yes , Michel , you heard me : I hate you ! It means that your mother is a man like Jacquie !".split(" ")
 # names = "Robert Michel Jacquie".split(" ")
 #... and the wild chase through Times Square ended with the suspect , Oleg Razgul, escaping . The fire department has identified the fire marshal involved in the failed pursuit as Jordy Warsaw .
 # ... before Emil boards the police boat and heads for Rykers Island where he will be checked into the psyche ward , I want to say one last word to you all ... As you know , Emil was coerced by Oleg Razgul into committing these murders , yet Oleg is still out in the street , a free man , filming gruesome murders ... My client and I hope he is brought to justice in the near future .
