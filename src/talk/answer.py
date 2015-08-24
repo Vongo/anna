@@ -89,7 +89,7 @@ class AnswerEngineAPI(object):
         print "In SentenceType + Category + Tokens"
         server = GraphServer("../../../neo4j")
         graph = server.graph
-        distribution = db.computeHistoTokenFrequency(lenghtHisto)
+        distribution = db.computeHistoTokenFrequency(lenghtHisto) # Distribution of NN* tokens
         sentencesQuery = "MATCH (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[0]+"\'}), (n:Sentence)-[:is_of_type]->(:SentenceType{label:\'"+labels[1]+"\'}), (n:Sentence)<-[:IS_COMPOSED_OF]-(:Dialogue)<-[:IS_COMPOSED_OF]-(m:Movie)-[:IS_OF_TYPE]->(:Category{label:\'"+categoryString+"\'}), (n:Sentence)-[:is_composed_of]->(:Token{token:{token}}) RETURN m.title AS movie_title,n.full_sentence AS sentence, n.id AS id LIMIT 100"
         for bin in distribution: # Try to find a sentence with the 1st token, if not possible try with 2nd one etc...
             records = graph.cypher.execute(sentencesQuery,token=bin.token)
