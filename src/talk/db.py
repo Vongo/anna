@@ -3,34 +3,42 @@ from py2neo import Node,Relationship
 
 HISTO_LENGTH = 5
 
+# Take a sentence and it's associate tokens and type and 
+# store alll of it in the db as the last sentence of the dialogue
 def insert(sentence, tokensAndType):
 
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 
+	# Retrieve all the sentences of the dialogue 
 	sentences = graph.cypher.execute("MATCH (n:Histo)-[r*0..5]->(st:SentenceHisto) RETURN st")
 	print sentences
 	numberOfSentences = len(sentences)
 
+	# Create a node to insert as the last sentence of the dialogue
 	sentence = Node("SentenceHisto", sentence=sentence)
 	sentenceType = graph.find_one("SentenceType",
                     property_key="label",
                     property_value = tokensAndType[1][0])
-
 	sentenceForm = graph.find_one("SentenceType",
                     property_key="label",
                     property_value = tokensAndType[1][1])
+	# Link the sentence with it's type and it's form
 	is_of_type = Relationship(sentence, "is_of_type", sentenceType)
 	is_of_form = Relationship(sentence, "is_of_type", sentenceForm) # pos / neg
 	graph.create(is_of_type)
 	graph.create(is_of_form)
 	print 'nb sentences : ' + str(numberOfSentences)
+
+	# If we have just started the dialogue we create the root node and store the sentence as its child
 	if numberOfSentences == 0:
 		histo = graph.find_one("Histo",
 								property_key="label",
 								property_value = "histo")
 		has = Relationship(histo, "is_followed_by", sentence)
 		graph.create(has)
+	# We only keep an history of the dialogue of HISTO_LENGTH sentences long
+	# So we delete the first sentence if the length is of HISTO_LENGTH
 	elif numberOfSentences == HISTO_LENGTH:
 		histo = graph.find_one("Histo",
 								property_key="label",
@@ -44,17 +52,18 @@ def insert(sentence, tokensAndType):
 
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
-
+	# We insert the sentence in the histo
 	else:
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
 
 	for token in tokensAndType[0]:
+		print token
 		tokenNode = graph.find_one("Token",
 							   property_key="token",
-							   property_value = token)
+							   property_value = token[0])
 		if tokenNode is None:
-			tokenNode = Node("Token", token=token)
+			tokenNode = Node("Token", token=token[0], pos=token[1])
 
 		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
