@@ -1,5 +1,7 @@
 from py2neo.server import GraphServer
 
+# Script to retrieve from the db 1000 sentence of each type
+# Sentences are stored in file txt
 def getSentencesByType():
 
 	server = GraphServer("../../neo4j")
