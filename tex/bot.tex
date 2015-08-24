@@ -205,5 +205,15 @@ But we thought it was important to separate the grammatical identification of th
 
 \subsubsection{Version 5 : Tokens frequency} % (fold)
 \label{ssub:version_5_tokens_frequency}
-\textbf{TODO} \textbf{TODO} \textbf{TODO} \textbf{TODO}
+The last version we implemented make use of the tokens frequency in the historic sub-graph. We first compute a distribution of the tokens with a Part-of-speech tag of \say{NN*}. It means that we consider :
+\begin{description}
+    \item[NN] Noun, singular or mass 
+    \item[NNS] Noun, plural
+    \item[NNP] Proper noun, singular
+    \item[NNPS] Proper noun, plural
+\end{description}
+The tokens are ordered by their frequency and we process the list from the most frequent to the least. We then query our model and search for sentences containing the first token. If none is found, we search for the second one and so on \dots \\
+
+The whole dialog process try to use the \say{best} version (currently the fifth one), if it doesn't return a sentence, we jump to the second best, then the third and so on \dots It results on the following code organization :
+\lstinputlisting[language=Python,caption=Answer code,label={code:answer}]{./prim/answerSample.py}
 % subsubsection version_5_tokens_frequency (end)
