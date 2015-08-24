@@ -59,11 +59,11 @@ def insert(sentence, tokensAndType):
 
 	for token in tokensAndType[0]:
 		print token
-		tokenNode = graph.find_one("Token",
+		tokenNode = graph.find_one("TokenHisto",
 							   property_key="token",
 							   property_value = token[0])
 		if tokenNode is None:
-			tokenNode = Node("Token", token=token[0], pos=token[1])
+			tokenNode = Node("TokenHisto", token=token[0], pos=token[1])
 
 		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
@@ -72,7 +72,7 @@ def insert(sentence, tokensAndType):
 def clean_histo():
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
-	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-()  DELETE rels, n")
+	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-(),(t:TokenHisto) delete rels, n,t")
 
 # Extract all the characters from a movie given a sentence of this movie
 def get_sentencesMovieCharacters(sentenceId):
@@ -109,5 +109,5 @@ def findNextSentenceType(lenghtHisto, depthHisto):
 def computeHistoTokenFrequency(lenghtHisto):
 	server = GraphServer("../../../neo4j")
 	graph = server.graph
-	query = "MATCH (n:Histo)-[:is_followed_by*0.."+str(lenghtHisto)+"]->(sh:SentenceHisto)-[:is_composed_of]->(t:Token) WHERE t.token[1]=~'NN' RETURN t.token,count(t) as total ORDER by total desc LIMIT 10"
+	query = "MATCH (n:Histo)-[:is_followed_by*0.."+str(lenghtHisto)+"]->(sh:SentenceHisto)-[:is_composed_of]->(t:TokenHisto) WHERE t.pos =~ 'NN*' RETURN t.token as token,count(t) as total ORDER by total desc LIMIT 10"
 	return  graph.cypher.execute(query)
