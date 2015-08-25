@@ -62,8 +62,7 @@ def computeProbas(occurences):
 			probas[sType][s2Type] = typesDico[s2Type]/total_sentence
 
 	return probas
-
-# 
+ 
 def buildProbas(dialogues, length, graph):
 
 	occurences = defaultdict(lambda: defaultdict(int))
