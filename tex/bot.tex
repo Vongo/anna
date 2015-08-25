@@ -185,7 +185,7 @@ The user can modify the chosen category at any time since the drop-down list is 
 \subsubsection{Version 4 : Replace proper nouns} % (fold)
 \label{ssub:version_4_replace_proper_nouns}
 One of the NLP applications we wanted to try with this tool was to build generic sentences.\\
-Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concerned NLP library : \textbf{LEO}
+Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concerned NLP library which have some problems to handle correctly the process of classifying words into their right lexical categories (Noun, Verb...). For example all words beginning by a uppercase letter is considered by the library as a proper noun. Moreover the online documentation giving the tag associated to each lexical category contains some errors.
 Then, we figured out that replacing proper nouns isn't that simple: it depends of the structure of the sentence.
 For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP (Jack, Bob and Lola) but we can't replace them with the same value, it wouldn't make any sense.
 For a general overview on how we decide how to replace NNPs, see Figure~\ref{fig:NamesDecisionTree}. \\

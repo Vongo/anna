@@ -37,6 +37,7 @@ def initStatsGraph(graph):
 	has = Relationship(stats, 'has', affPos)
 	graph.create(has)
 
+# Retrieve the type of a sentence
 def getType(sentence, graph):
 
 	typesNodes = graph.cypher.execute("MATCH (s:Sentence{id:'"+sentence.properties['id']+"'})--(t:SentenceType) RETURN t")
@@ -48,6 +49,7 @@ def getType(sentence, graph):
 	else:
 		return typesNodes[1]['t'].properties['label'] + ' ' + typesNodes[0]['t'].properties['label']
 
+# Compute the probas given the occurences of types of sentence following a sequence of sentence
 def computeProbas(occurences):
 
 	probas = defaultdict(lambda: defaultdict(int))
@@ -63,7 +65,7 @@ def computeProbas(occurences):
 
 	return probas
 
-# 
+# Compute the probabilities of the types of the following sentences for sequences of given length
 def buildProbas(dialogues, length, graph):
 
 	occurences = defaultdict(lambda: defaultdict(int))
@@ -89,6 +91,7 @@ def buildProbas(dialogues, length, graph):
 
 	return probas
 
+# Build query to retrieve TypeSentence node
 def buildQuery(strLabels):
 
 	queryString = "MATCH (:Stats)"
@@ -103,7 +106,7 @@ def buildQuery(strLabels):
 
 	return queryString
 
-# Insert the statistic tree in the db
+# Insert new TypeSentence node in the stats tree
 def buildTreeStats(probas, graph):
 	
 	for key, Dval in probas.iteritems():
