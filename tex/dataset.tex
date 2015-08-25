@@ -70,6 +70,7 @@ First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a s
 We found it strange that all those 4 tags aren't children of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's children and group every group of 4 tags together in a single entity.\\
 Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section \ref{ssec:enrich}). \\
 Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
+
 \subsection{Enrichments}
 \label{ssec:enrich}
 The Movie-DiC corpus only contains data about the content of the movie, but no data about the movie itself apart from its title. In order to build statistics, presented in section \ref{ssec:stats}, we enriched the corpus with the help of the Open Movie Database (short OMDb) API\footnote{http://www.omdbapi.com/}. This API is maintained by its users and isn't endorsed by or affiliated with the more famous IMDB website\footnote{http://www.imdb.com/}.\\
@@ -80,6 +81,14 @@ Answer :
 \lstinputlisting[language=json,caption=OMDb answer,label={code:omdb}]{./prim/whiplash.json}
 So we processed the whole corpus through this API and saved only the following fields : Country, imdbRating, Director, Actors, Year, Genre, Runtime, imdbVotes. \\
 The \say{Genre} field is also used in one of our chatbot version, see section \ref{sssec:v_genre} for more details.
+
+\subsection{How to use our data ?} % (fold)
+\label{sub:how_to_use_our_data_}
+The Movie-DiC corpus isn't public so you will need to contact its author in order to have his approval and to get the XML file. All the enrichments we worked with are available on our Github\footnote{https://github.com/Vongo/anna/blob/master/src/pre-processing/movies-categorization/outputs/allMovies.json}. It is also possible to generate the file yourself, the function to call is \emph{generate\_all\_infos\_json} in the \emph{categorization.py} file.\\
+
+This file is organized as a key-value JSON with the key being the movie's ID and the value being a JSON containing all the details we kept from the OMDb's API response. Therefore it is very simple to link our enrichments to the main file : you just need to join the movies using their IDs. Here's a simple example :
+\lstinputlisting[language=Python,caption=Usage example,label={code:usage}]{./prim/data.py}
+% subsection how_to_use_our_data_ (end)
 
 \newpage
 \subsection{Statistics}
