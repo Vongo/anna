@@ -3,14 +3,14 @@ from py2neo import Node,Relationship
 
 HISTO_LENGTH = 5
 
-# Take a sentence and it's associate tokens and type and 
+# Take a sentence and it's associate tokens and type and
 # store alll of it in the db as the last sentence of the dialogue
 def insert(sentence, tokensAndType):
 
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 
-	# Retrieve all the sentences of the dialogue 
+	# Retrieve all the sentences of the dialogue
 	sentences = graph.cypher.execute("MATCH (n:Histo)-[r*0..5]->(st:SentenceHisto) RETURN st")
 	print sentences
 	numberOfSentences = len(sentences)
@@ -49,7 +49,6 @@ def insert(sentence, tokensAndType):
 		for rel in sentences[0][0].match():
 			graph.delete(rel)
 		graph.delete(sentences[0][0])
-
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
 	# We insert the sentence in the histo

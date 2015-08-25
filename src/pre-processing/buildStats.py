@@ -63,7 +63,7 @@ def computeProbas(occurences):
 
 	return probas
 
-# 
+#
 def buildProbas(dialogues, length, graph):
 
 	occurences = defaultdict(lambda: defaultdict(int))
@@ -105,7 +105,7 @@ def buildQuery(strLabels):
 
 # Insert the statistic tree in the db
 def buildTreeStats(probas, graph):
-	
+
 	for key, Dval in probas.iteritems():
 		query = buildQuery(key)
 		node = graph.cypher.execute(query)
@@ -115,14 +115,13 @@ def buildTreeStats(probas, graph):
 			has = Relationship(node[0]["node"], 'has', newNode)
 			graph.create(has)
 
-# Function called once after the initialisation of the database to build the statistic tree 
+# Function called once after the initialisation of the database to build the statistic tree
 def buildStats(graph):
 
 	# retrieve all the dialogues in the db
 	dialogues = graph.cypher.execute("MATCH p=(d:Dialogue)-[:IS_COMPOSED_OF]-(s1:Sentence{order:0})-[:sentence_followed_by*]-(s:Sentence) WHERE length(p)=toInt(d.n_utterances) RETURN p")
-	
+
 	# We compute the probabilities of the type of the next sentence for sequences of 5 sentences max
 	for length in range(1,5):
 		probas = buildProbas(dialogues, length, graph)
 		buildTreeStats(probas, graph)
-
