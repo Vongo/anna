@@ -1,3 +1,4 @@
+import xml.etree.ElementTree as ET
 # Open the JSON file containing all details
 with open(theJSONFilePath) as data_file:
 	allMoviesDetails = json.load(data_file)

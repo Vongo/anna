@@ -82,6 +82,7 @@ Answer :
 So we processed the whole corpus through this API and saved only the following fields : Country, imdbRating, Director, Actors, Year, Genre, Runtime, imdbVotes. \\
 The \say{Genre} field is also used in one of our chatbot version, see section \ref{sssec:v_genre} for more details.
 
+\newpage
 \subsection{How to use our data ?} % (fold)
 \label{sub:how_to_use_our_data_}
 The Movie-DiC corpus isn't public so you will need to contact its author in order to have his approval and to get the XML file. All the enrichments we worked with are available on our Github\footnote{https://github.com/Vongo/anna/blob/master/src/pre-processing/movies-categorization/outputs/allMovies.json}. It is also possible to generate the file yourself, the function to call is \emph{generate\_all\_infos\_json} in the \emph{categorization.py} file.\\
