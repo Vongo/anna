@@ -16,6 +16,9 @@ class AnswerEngineAPI(object):
     def __init__(self):
         super(AnswerEngineAPI, self).__init__()
 
+    # Main method for getting the best answer from Anna.
+    # "userLine" is the last utterance spoken by the user.
+    # "category" is the movie category we should extract the answer from.
     def getAnnasAnswer(self, userLine, category):
         tokTypesUser = histo.getTokensAndType(userLine)
         db.insert(userLine, tokTypesUser) #timeout
@@ -98,6 +101,9 @@ class AnswerEngineAPI(object):
                 return (records[index].sentence,records[index].id)
         return None
 
+# Gets Anna's best answer given a userLine and a movie category.
+# "userLine" is the last utterance spoken by the user.
+# "category" is the movie category we should extract the answer from.
 def getAnswer(userLine, category):
     anna = AnswerEngineAPI()
     return anna.getAnnasAnswer(userLine, category)
