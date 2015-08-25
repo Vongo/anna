@@ -187,11 +187,12 @@ The user can modify the chosen category at any time since the drop-down list is 
 One of the NLP applications we wanted to try with this tool was to build generic sentences.\\
 Here, we tried to detect proper nouns and to replace them with some chosen values. The first problem we faced concerned NLP library which have some problems to handle correctly the process of classifying words into their right lexical categories (Noun, Verb...). For example all words beginning by a uppercase letter is considered by the library as a proper noun. Moreover the online documentation giving the tag associated to each lexical category contains some errors.
 Then, we figured out that replacing proper nouns isn't that simple: it depends of the structure of the sentence.
-For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP (Jack, Bob and Lola) but we can't replace them with the same value, it would make no sense.
-We had to split the initial utterance into sub-sentences, or naive propositions.
-This was done by detecting the presence of a grammatical separators such as "\textbf{.}", "\textbf{that}", "\textbf{:}", "\textbf{;}", "\textbf{?}", "\textbf{!}", "\textbf{,}", "\textbf{what}", "\textbf{-}" or "\textbf{...}".\\
-Once we isolated the sub-sentences, we determined whether the NNP was the subject of the sentence (\say{I'm Bob !}), if someone is talking to him (\say{Hello Jack,}) or if he's a third party (\say{What do you think about our friend Lola ?}).
-Given these three cases, we replaced as follows :
+For instance, in the sentence \say{Hello Jack, I'm Bob ! What do you think about our friend Lola ?} we got 3 NNP (Jack, Bob and Lola) but we can't replace them with the same value, it wouldn't make any sense.
+For a general overview on how we decide how to replace NNPs, see Figure~\ref{fig:NamesDecisionTree}. \\
+We first split the initial utterance into sub-sentences, or naive propositions.
+This is done by detecting the presence of a grammatical separators such as "\textbf{.}", "\textbf{that}", "\textbf{:}", "\textbf{;}", "\textbf{?}", "\textbf{!}", "\textbf{,}", "\textbf{what}", "\textbf{-}" or "\textbf{...}".\\
+Once we isolated the sub-sentences, we determine whether the NNP is the subject of the sentence (\say{I'm Bob !}), if someone is talking to him (\say{Hello Jack,}) or if he's a third party (\say{What do you think about our friend Lola ?}).
+Given these three cases, we replace as follows :
 \begin{description}
     \item[Case 1 : Subject] NNP becomes \say{ANNA}.
     \item[Case 2 : Interlocutor] NNP becomes \say{USERNAME}
@@ -200,10 +201,26 @@ Given these three cases, we replaced as follows :
 Then the interface engine replaces those special chars by matching ones.
 Note that \textit{ANNA} always becomes "Anna", so we could have avoided this step for this token.
 But we thought it was important to separate the grammatical identification of the NNP from the replacement with the proper noumns.
-\textbf{INSERER FIGURE}
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.70\textwidth]{./img/DecisionNames.png}
+\end{center}
+\caption{Decision tree on how to replace the names in a given utterance.}
+\label{fig:NamesDecisionTree}
+\end{figure}
 % subsubsection version_4_replace_proper_nouns (end)
 
 \subsubsection{Version 5 : Tokens frequency} % (fold)
 \label{ssub:version_5_tokens_frequency}
-\textbf{TODO} \textbf{TODO} \textbf{TODO} \textbf{TODO}
+The last version we implemented make use of the tokens frequency in the historic sub-graph. We first compute a distribution of the tokens with a Part-of-speech tag of \say{NN*}. It means that we consider :
+\begin{description}
+    \item[NN] Noun, singular or mass 
+    \item[NNS] Noun, plural
+    \item[NNP] Proper noun, singular
+    \item[NNPS] Proper noun, plural
+\end{description}
+The tokens are ordered by their frequency and we process the list from the most frequent to the least. We then query our model and search for sentences containing the first token. If none is found, we search for the second one and so on \dots \\
+
+The whole dialog process try to use the \say{best} version (currently the fifth one), if it doesn't return a sentence, we jump to the second best, then the third and so on \dots It results on the following code organization :
+\lstinputlisting[language=Python,caption=Answer code,label={code:answer}]{./prim/answerSample.py}
 % subsubsection version_5_tokens_frequency (end)

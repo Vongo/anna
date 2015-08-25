@@ -7,6 +7,7 @@ shinyUI(
 			mainPanel(
 				tabsetPanel(
 					id="tabs",
+					# Tab where the user can set his Nickname
 					tabPanel(
 						title="User Detail",
 						fluidRow(h3("  Nickname"),
@@ -27,6 +28,7 @@ shinyUI(
 							)
 						)
 					),
+					# Tab for chatting with Anna
 					tabPanel(
 						title="Chat",
 						fluidRow(

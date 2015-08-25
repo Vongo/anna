@@ -10,6 +10,7 @@ sys.path.insert(0, '../')
 import buildStats
 from py2neo.packages.httpstream import http
 
+# DB constraints
 def create_constraints(schema):
     # Movies
     schema.create_uniqueness_constraint("Movie","title")
@@ -26,6 +27,7 @@ def create_constraints(schema):
     # Characters
     schema.create_index("Character","full_name")
 
+# Create all categories nodes
 def create_categories_nodes(graph):
     with open('../movies-categorization/outputs/categories.json') as data_file:
         data = json.load(data_file)
@@ -33,6 +35,7 @@ def create_categories_nodes(graph):
             cat = Node("Category", label=label)
             graph.create(cat)
 
+# Create sentence types nodes
 def create_sentence_types(graph):
     # Interrogative
     inter = Node("SentenceType", label="interrogative")
@@ -53,6 +56,7 @@ def create_sentence_types(graph):
     greet = Node("SentenceType", label="greeting")
     graph.create(greet)
 
+# Main function, parse the whole XML file into our graph model
 def parseMoviesXML(graph):
     tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
@@ -126,7 +130,7 @@ def parseMoviesXML(graph):
 
         print "  Done."
 
-
+# Init historic
 def init_histo(graph):
 	histo = Node("Histo", label="histo")
 	graph.create(histo)

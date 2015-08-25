@@ -2,6 +2,7 @@ from collections import defaultdict
 import xml.etree.ElementTree as ET
 import urllib, requests, json
 
+# Query OMDb's API by movie's title
 def query_movie_api(movieTitle):
     data = {}
     data['t'] = movieTitle
@@ -12,6 +13,7 @@ def query_movie_api(movieTitle):
     r = requests.get(full_url)
     return r.json()
 
+# Modify the title (some of the movie's title in the Dataset are funny)
 def generate_clean_title(title):
     clean=title
     if title.endswith("The"):
@@ -32,6 +34,7 @@ def generate_clean_title(title):
         clean = clean.replace(" ll ", "'ll ")
     return clean
 
+# Generate a set with all possible genres
 def generate_genre_set(srcFile):
     genres=set()
     tree = ET.parse(srcFile)
@@ -47,6 +50,7 @@ def generate_genre_set(srcFile):
             print title + " not found"
     return genres
 
+# Export JSON data
 def create_and_print_json(genres_set):
     all_genres=dict.fromkeys(sorted(genres_set))
     id_genre=0
@@ -56,10 +60,12 @@ def create_and_print_json(genres_set):
         with open('../outputs/categories.json', 'w') as outfile:
             json.dump(all_genres, outfile)
 
+# Main function to generate Categories' JSON file
 def create_categories_dict():
     genres = generate_genre_set(srcFile)
     create_and_print_json(genres)
 
+# Categorize movies using OMDb's API
 def categorize_movies(srcFile):
     with open('../outputs/categories.json') as data_file:
         genres = json.load(data_file)
@@ -77,7 +83,7 @@ def categorize_movies(srcFile):
         title = generate_clean_title(title)
         jsonResponse = query_movie_api(title)
         id_genres = []
-        if jsonResponse['Response'] == "True":
+        if jsonResponse['Response'] == "True": # If movie is find in OMDb
             for genre in jsonResponse['Genre'].split(', '):
                 current_id_genre = genres[genre]
                 id_genres.append(current_id_genre)
@@ -87,12 +93,13 @@ def categorize_movies(srcFile):
             allCategories[genres['N/A']].append(id_movie)
 
         allMovies[id_movie]=id_genres
-
+        # Print JSON files
         with open('../outputs/categoriesPerMovie.json', 'w') as outfile:
             json.dump(allMovies, outfile)
         with open('../outputs/moviesPerCategory.json', 'w') as outfile:
             json.dump(allCategories, outfile)
 
+# Generate a full JSON file containing all movies' data
 def generate_all_infos_json(srcFile):
     print "Extracting movies' details from the OMDB API"
     with open('../outputs/categories.json') as data_file:
@@ -107,7 +114,7 @@ def generate_all_infos_json(srcFile):
         title = generate_clean_title(title)
         print "Processing " + title
         jsonResponse = query_movie_api(title)
-        if jsonResponse['Response'] == "True":
+        if jsonResponse['Response'] == "True": # Delete useless data
             del jsonResponse['Response']
             del jsonResponse['Rated']
             del jsonResponse['Released']

@@ -68,11 +68,13 @@ def insert(sentence, tokensAndType):
 		is_composed_of = Relationship(sentence, "is_composed_of", tokenNode)
 		graph.create(is_composed_of)
 
+# Delete the potential existing historic of dialogue before starting a new one
 def clean_histo():
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
-	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-()  DELETE rels, n")
+	graph.cypher.execute("MATCH (n:SentenceHisto)-[rels]-(),(t:TokenHisto) delete rels, n,t")
 
+# Extract all the characters from a movie given a sentence of this movie
 def get_sentencesMovieCharacters(sentenceId):
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
@@ -80,6 +82,7 @@ def get_sentencesMovieCharacters(sentenceId):
 	results = graph.cypher.execute_one(query, sentenceId=sentenceId)
 	return results
 
+# Given a historic length (how far should we look into it), we compute the next sentence type (affirmative positive for instance) using pre-processed statistics
 def findNextSentenceType(lenghtHisto, depthHisto):
     server = GraphServer("../../../neo4j")
     graph = server.graph
@@ -102,8 +105,9 @@ def findNextSentenceType(lenghtHisto, depthHisto):
     nextType = graph.cypher.execute(queryString)
     return nextType[0].label
 
+# Get the token distribution in the historic, only NN* are taken into account
 def computeHistoTokenFrequency(lenghtHisto):
 	server = GraphServer("../../../neo4j")
 	graph = server.graph
-	query = "MATCH (n:Histo)-[:is_followed_by*0..{lenghtHisto}]->(sh:SentenceHisto)-[:is_composed_of]->(t:TokenHisto) RETURN t.token,count(t) as total ORDER by total desc LIMIT 10"
-	return  graph.cypher.execute(query, lenghtHisto=lenghtHisto)
+	query = "MATCH (n:Histo)-[:is_followed_by*0.."+str(lenghtHisto)+"]->(sh:SentenceHisto)-[:is_composed_of]->(t:TokenHisto) WHERE t.pos =~ 'NN*' RETURN t.token as token,count(t) as total ORDER by total desc LIMIT 10"
+	return  graph.cypher.execute(query)

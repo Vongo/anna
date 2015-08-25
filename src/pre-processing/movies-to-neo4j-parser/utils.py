@@ -1,6 +1,7 @@
 from py2neo import Node
 import json
 
+# Get the label of a genre given its id
 def get_cat_label(idCat):
 	with open('../movies-categorization/outputs/categories.json') as data_file:    
 		data = json.load(data_file)
@@ -8,6 +9,7 @@ def get_cat_label(idCat):
 			if idC == idCat:
 				return cat
 
+# Get genres' nodes for a given movie
 def get_movies_genres(movieID, graph):
 	with open('../movies-categorization/outputs/categoriesPerMovie.json') as data_file:    
 		genresNodes = []
