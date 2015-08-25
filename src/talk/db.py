@@ -46,9 +46,8 @@ def insert(sentence, tokensAndType):
 		has = Relationship(histo, "is_followed_by", sentences[1][0])
 		graph.create(has)
 
-		for rel in sentences[0][0].match():
-			graph.delete(rel)
-		graph.delete(sentences[0][0])
+		first = graph.match_one(start_node=histo, end_node=sentences[0][0])
+		graph.delete(first)
 
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
