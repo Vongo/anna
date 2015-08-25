@@ -40,14 +40,13 @@ def insert(sentence, tokensAndType):
 	# We only keep an history of the dialogue of HISTO_LENGTH sentences long
 	# So we delete the first sentence if the length is of HISTO_LENGTH
 	elif numberOfSentences == HISTO_LENGTH:
+		graph.cypher.execute("MATCH (n:Histo)-[r:is_followed_by*1]->(:SentenceHisto) FOREACH( rel IN r| DELETE rel)")
+
 		histo = graph.find_one("Histo",
 								property_key="label",
 								property_value = "histo")
 		has = Relationship(histo, "is_followed_by", sentences[1][0])
 		graph.create(has)
-
-		first = graph.match_one(start_node=histo, end_node=sentences[0][0])
-		graph.delete(first)
 
 		is_followed_by = Relationship(sentences[-1][0], "is_followed_by", sentence)
 		graph.create(is_followed_by)
