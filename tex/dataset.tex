@@ -120,10 +120,62 @@ We have no pretension to be cinema experts, and there are obvious bias to any st
 \paragraph{Modus Operandi}
 \label{par:ModusOperandi}
 All the aggregated statistics you are going to see in this section are based on data aggregated on the condition that there is enough of it.
-For instance, in the next section \ref{subs:Director}, we are going to describe which film directors have made the movies that were most (and least) appreciated by the public.
+For instance, in the next section \ref{subs:Directors}, we are going to describe which film directors have made the movies that were most (and least) appreciated by the public.
 In order to avoid outliers, especially in such a small dataset, we decided not to evaluate the movies from directors of whom only one movie is represented.
 This method is not perfect, and to have stronger results, we should have increased this threshold to 5 movies at least.
 But the author of our dataset decided not to focus on some specific directors, and to represent as many of them as possible.
+
+\newpage
+\subsubsection{Topology of the data}
+\label{subs:Topology}
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=0.70\textwidth]{../src/pre-processing/stats/results/distYears.png}
+\end{center}
+\caption{Distribution of movies in time}
+\label{fig:distYears}
+\end{figure}
+As we can see in Figure~\ref{fig:distYears}, most of the movies in the dataset come from the 1990-2010 period.
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=1.1\textwidth]{../src/pre-processing/stats/results/Distribution genres.png}
+\end{center}
+\caption{Distribution of movies by genre}
+\label{fig:distGenres}
+\end{figure}
+Figure~\ref{fig:distGenres} show that most of the movies are Drama. Action, Comedy, Crime, Thriller and Romance also have an acceptable amount of data.
+But Adult movies, Game-Show and Reality-TV, alongside with Western, are definitely not represented enough to build reliable stats on it.
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=0.70\textwidth]{../src/pre-processing/stats/results/distNbVotes.png}
+\end{center}
+\caption{Distribution of amount of OMDb ratings}
+\label{fig:distNbVotes}
+\end{figure}
+Besides, before taking into account our stats on the quality of movies, actors or directors, we have to be aware of the fact that most of the time, few people voted (see Figure~\ref{fig:distNbVotes}).
+See also Figure~\ref{fig:ratingPerNbVotes} to check how the amount of votes correlates with the "quality" of the movie.
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=0.70\textwidth]{../src/pre-processing/stats/results/distRatings.png}
+\end{center}
+\caption{Distribution of OMDb ratings}
+\label{fig:distRatings}
+\end{figure}
+The ratings themselves follow a Gaussian distribution centered around 7.25, as we can see in Figure~\ref{fig:distRatings}.
+
+\newpage
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=0.70\textwidth]{../src/pre-processing/stats/results/distRuntime.png}
+\end{center}
+\caption{Distribution of runtimes}
+\label{fig:distRuntime}
+\end{figure}
+The movie duration also follows a Gaussian distribution, centered around 100-120 minutes (see Figure~\ref{fig:distRuntime}).
 
 \subsubsection{Directors}
 \label{subs:Directors}

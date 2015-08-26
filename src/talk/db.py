@@ -3,8 +3,6 @@ from py2neo import Node,Relationship
 
 HISTO_LENGTH = 5
 
-# Take a sentence and it's associate tokens and type and 
-# store all of it in the db as the last sentence of the dialogue
 def insert(sentence, tokensAndType):
     """
     Take a sentence and it's associate tokens and type and store all of it in the db as the last sentence of the dialogue
@@ -18,7 +16,7 @@ def insert(sentence, tokensAndType):
 	server = GraphServer("../../../neo4j")
 	graph=server.graph
 
-	# Retrieve all the sentences of the dialogue 
+	# Retrieve all the sentences of the dialogue
 	sentences = graph.cypher.execute("MATCH (n:Histo)-[r*0..5]->(st:SentenceHisto) RETURN st")
 	print sentences
 	numberOfSentences = len(sentences)

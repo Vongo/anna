@@ -1,11 +1,13 @@
 require(rjson)
 require(ggplot2)
 
+# We read the enriched data
 aa <- fromJSON(file="../movies-categorization/outputs/allMovies.json")
 longueur <- length(aa)
 
 columnNames <- c("Title","Country","imdbRating","Director","Actors","Year","Genre","Runtime","imdbVotes")
 
+# We create a data.frame representation of this data. Note that the variables are already known.
 yy <- sapply(columnNames, function(c) {
     sapply(1:longueur, function(m) {
         aa[[m]][c]
@@ -17,11 +19,15 @@ xx <- data.frame(yy, stringsAsFactors=F)
 movieNames <- xx$Title
 rownames(xx) <- movieNames
 
+# We do a bit of formatting.
 xx$Runtime <- sapply(xx$Runtime, function(x) as.numeric(strsplit(x, " ")[[1]][1]))
 xx$Year <- sapply(xx$Year, function(x) as.numeric(strsplit(x, "–")[[1]][1]))
 xx$imdbRating <- as.numeric(xx$imdbRating)
 xx$imdbVotes <- as.numeric(xx$imdbVotes)
 
+# Creates a cooccurrence matrix between semantic units
+# - units are the semantic units for which we want to know the cooccurrences
+# - liste is the liste of semantic observations for which units can cooccur
 cooccurrences <- function(units, liste) {
     amtx <- matrix(0, length(units), length(units), dimnames=list(units, units))
     for (elem in liste) {
@@ -39,6 +45,25 @@ cooccurrences <- function(units, liste) {
     amtx
 }
 
+# Describe the topology of the data
+# Distribution of the main variables
+
+png("./results/distRatings.png",height=360,width=480)
+hist(xx$imdbRating, xlab="Distribution of ratings")
+dev.off()
+
+png("./results/distYears.png",height=360,width=480)
+hist(xx$Year, xlab="Distribution of movies in time")
+dev.off()
+
+png("./results/distRuntime.png",height=360,width=480)
+hist(xx$Runtime, xlab="Distribution of movie runtimes")
+dev.off()
+
+png("./results/distNbVotes.png",height=360,width=480)
+hist(xx$imdbVotes, xlab="Distribution of amount of votes")
+dev.off()
+
 # Cooccurrence genres
 genreBmovie <- lapply(movieNames, function(m) {
     l_genres <- xx[m,"Genre"]$Title
@@ -49,7 +74,12 @@ genres <- unique(unlist(genreBmovie))
 coocGenre <- cooccurrences(genres,genreBmovie)
 write.table(coocGenre, "./results/coocGenre.csv", col.names=T, row.names=T, sep=";")
 
-# Cooccurrence acteurs
+# Genre Distribution
+png("./results/distGenres.png",height=1200,width=1680)
+x <- barplot(summary(as.factor(unlist(genreBmovie))))
+dev.off()
+
+# Cooccurrence actors
 acteurBmovie <- lapply(movieNames, function(m) {
     l_acteur <- xx[m,"Actors"]$Title
     unlist(strsplit(l_acteur, ", "))
@@ -69,7 +99,7 @@ countrys <- unique(unlist(countryBmovie))
 coocCountry <- cooccurrences(countrys,countryBmovie)
 write.table(coocCountry, "./results/coocCountry.csv", col.names=T, row.names=T, sep=";")
 
-# Note moyenne par pays
+# Average rating by country
 rateBcountry <- sapply(countrys, function(c) {
     grades <- xx[grepl(c,xx$Country),"imdbRating"]
     grades <- grades[complete.cases(grades)]
@@ -85,7 +115,7 @@ labs <- names(rateBcountry)
 text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
 dev.off()
 
-# Note moyenne par acteur
+# Average rating by actor
 rateBactor <- sapply(acteurs, function(d) {
     grades <- xx[grepl(d,xx$Actors),"imdbRating"]
     grades <- grades[complete.cases(grades)]
@@ -109,7 +139,7 @@ labs <- names(bestActors)
 text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
 dev.off()
 
-# Note moyenne par réalisateur
+# Average rating by director
 directorBmovie <- lapply(movieNames, function(m) {
     l_directors <- xx[m,"Director"]$Title
     unlist(strsplit(l_directors, ", "))
@@ -138,7 +168,7 @@ labs <- names(bestDirectors)
 text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
 dev.off()
 
-# Note moyenne par année
+# Average rating by year
 rateByear <- tapply(xx$imdbRating, xx$Year, mean)
 years <- unique(xx$Year)
 
@@ -149,7 +179,7 @@ plot(years, rateByear)
 abline(fit)
 dev.off()
 
-# Note moyenne par genre
+# Average rating by genre
 rateBgenre <- sapply(genres, function(d) {
     grades <- xx[grepl(d,xx$Genre),"imdbRating"]
     grades <- grades[complete.cases(grades)]
@@ -165,14 +195,14 @@ labs <- names(rateBgenre)
 text(cex=1, x=x, y=-0.25, labs, xpd=TRUE, srt=35, pos=2)
 dev.off()
 
-# note/durée
+# Average rating by runtime
 fit <- lm(xx$imdbRating ~ xx$Runtime)
 png("./results/ratingPerRuntime.png",height=360,width=480)
 plot(xx$Runtime,xx$imdbRating)
 abline(fit)
 dev.off()
 
-# note/nombreVotes
+# Average rating by number of votes
 Data <- xx[,c("imdbRating","imdbVotes")]
 names(Data) <- c("y","x")
 Data <- Data[complete.cases(Data),]
@@ -180,7 +210,7 @@ png("./results/ratingPerNbVotes.png",height=360,width=480)
 ggplot(Data, aes(x,y)) + geom_point() + geom_smooth()
 dev.off()
 
-# Durée moyenne par genre
+# Average runtime by genre
 dureeBgenre <- sapply(genres, function(d) {
     duration <- xx[grepl(d,xx$Genre),"Runtime"]
     duration <- duration[complete.cases(duration)]
