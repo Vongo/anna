@@ -164,12 +164,13 @@ Figure \ref{fig:stats} displays a 3-depth graph of probabilities in which we can
 Then when Anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue. It results on conversations which are correctly structured. See figure \ref{fig:convST} for a creepy example.
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=0.80\textwidth]{./img/convST.png}
+\includegraphics[width=0.70\textwidth]{./img/convST.png}
 \end{center}
 \caption{Conversation from V2}
 \label{fig:convST}
 \end{figure}
 
+\newpage
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}
 This version propose a new feature which allows the user to choose which kind of movie should be queried by Anna. The movies' categories have been added to the dataset through the OMDb API, see \ref{ssec:enrich} for more details about the API and the enrichment process.\\
