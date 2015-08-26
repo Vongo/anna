@@ -10,8 +10,13 @@ sys.path.insert(0, '../')
 import buildStats
 from py2neo.packages.httpstream import http
 
-# DB constraints
 def create_constraints(schema):
+    """
+    Create all DB constraints
+
+    @type  schema: graph schema
+    @param schema: Schema of the graph
+    """
     # Movies
     schema.create_uniqueness_constraint("Movie","title")
     # Categories
@@ -29,14 +34,25 @@ def create_constraints(schema):
 
 # Create all categories nodes
 def create_categories_nodes(graph):
+    """
+    Create all categories nodes
+
+    @type  graph: GraphServer
+    @param graph: The graph
+    """
     with open('../movies-categorization/outputs/categories.json') as data_file:
         data = json.load(data_file)
         for label in data.keys():
             cat = Node("Category", label=label)
             graph.create(cat)
 
-# Create sentence types nodes
 def create_sentence_types(graph):
+    """
+    Create all sentence types nodes
+
+    @type  graph: GraphServer
+    @param graph: The graph
+    """
     # Interrogative
     inter = Node("SentenceType", label="interrogative")
     graph.create(inter)
@@ -58,6 +74,12 @@ def create_sentence_types(graph):
 
 # Main function, parse the whole XML file into our graph model
 def parseMoviesXML(graph):
+    """
+    Main function, parse the whole XML file into our graph model
+
+    @type  graph: GraphServer
+    @param graph: The graph
+    """
     tree = ET.parse('../../../data/1movie.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
@@ -130,10 +152,15 @@ def parseMoviesXML(graph):
 
         print "  Done."
 
-# Init historic
 def init_histo(graph):
-	histo = Node("Histo", label="histo")
-	graph.create(histo)
+    """
+    Initiate the historic node
+
+    @type  graph: GraphServer
+    @param graph: The graph
+    """
+    histo = Node("Histo", label="histo")
+    graph.create(histo)
 
 server = GraphServer("../../../neo4j")
 server.stop()

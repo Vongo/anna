@@ -49,12 +49,22 @@
 This section describe the chosen dataset and explain how we enriched it. Statistics about data are also presented.
 \subsection{Initial Dataset}
 \subsubsection{Description}
-The first challenge we had to face was finding a corpus of movies' dialogues. Luckily, our supervisor provided us one called Movie-DiC. This corpus has been built by R. Banchs \cite{banchs} for research and development purposes.\\
-Movie-DiC comprises 132,229 dialogues, containing 764,146 turns (also called utterances) extracted from 753 different movies. In \cite{banchs}, the author mention some basic statistics about the corpus :
-\begin{itemize}
-\item Avg. amount of dialogues per movie : 175.60
-\item Avg. amount of utterances per dialogue : 5.78
-\end{itemize}
+The first challenge we had to face was finding a corpus of movies' dialogues. Luckily, our supervisor provided us one called Movie-DiC. This corpus has been built by R. Banchs \cite{banchs} for research and development purposes. See below table for some statistics about the corpus.\\
+\begin{table}[h!]
+\centering
+\label{tablestats}
+\begin{tabular}{ll}
+Total number of scripts collected & 911 \\
+Total number of scripts processed & 753 \\
+Total number of dialogues & 132,229 \\
+Total number of speaker turns & 764,146 \\
+Average amount of dialogues per movie & 175.60 \\
+Average amount of turns per movie & 1,014.80 \\
+Average amount of turns per dialogue & 5.78 
+\end{tabular}
+\caption{Main statistics}
+\end{table}
+
 The corpus consist on a XML document of 2,249,053 lines, its structure isn't so complex since his maximal depth is only of 3 (movie - dialogue - utterance). See Code~\ref{code:dial} for an example of a dialogue unit.\\
 \lstinputlisting[language=XML,caption=Dialogue unit,label={code:dial}]{./prim/dialUnit.xml}
 This dialogue is pulled out the \say{xXx} movie\footnote{xXx on IMDB : http://www.imdb.com/title/tt0295701/} produced in 2002 by Rob Cohen.
@@ -69,7 +79,7 @@ First, as you can see above in Code~\ref{code:dial}, one dialogue is in fact a s
 \end{enumerate}
 We found it strange that all those 4 tags aren't children of another one, let say \say{utterance}. It would make more sense given the XML spirit and would also be easier to parse. Here we had to iterate on the dialogue's children and group every group of 4 tags together in a single entity.\\
 Then, some of the movies' titles are modified. For instance \say{X Files Fight the Future The} in fact refers to the movie \say{The X Files Fight the Future}. These little modifications are a problem when it comes to the enrichments phase (see section \ref{ssec:enrich}). \\
-Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing.
+Finally, the XML document wasn't totally correct, there were special characters such as \say{\&} which blocked the python XML parser. A root tag was also missing. We fixed these errors manually before any operation on the corpus.\\
 
 \subsection{Enrichments}
 \label{ssec:enrich}
