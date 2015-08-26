@@ -58,7 +58,7 @@ def create_sentence_types(graph):
 
 # Main function, parse the whole XML file into our graph model
 def parseMoviesXML(graph):
-    tree = ET.parse('../../../data/1movie.xml')
+    tree = ET.parse('../../../data/MovieDiC_V2_clean.xml')
     root = tree.getroot()
     for movie in root.findall('movie'):
         speakers={}
