@@ -43,6 +43,34 @@ We store the full sentence as an attribute of the Sentence node. The labels of t
 \label{fig:sent}
 \end{figure}
 
+\subsection{Architecture}
+\label{sub:Architecture}
+
+If we take a look at Figure~\ref{fig:Archi}, we can see that the responsibilities given to R and Python are not the same.
+R is in charge of :
+\begin{itemize}
+    \item The User Interface, both for the cosmetic and the behavioural part.
+    These components will also be responsible for calling Python API through an elegant R API, thanks to the library \textit{rPython\footnote{$rpython.r-forge.r-project.org/$}}.
+    \item Building the statistics on the new data we get on the web.
+    For that matter, we use built-in R, as well as \textit{ggplot2\footnote{$ggplot2.org/$}} library.
+    For cooccurrences graphs, we build cooccurrence matrices, that we read and display with Gephi\footnote{$gephi.github.io/$}.
+    \item Taking into account the user's evaluations\footnote{In a later version.}.
+\end{itemize}
+
+On the other hand, Python is in charge of :
+\begin{itemize}
+    \item Retrieving information about the movies through OMDb API\footnote{$www.omdbapi.com/$}.
+    \item Parsing the XML dataset\footnote{$docs.python.org/2/library/xml.html$} to build the neo4j graphbase\footnote{$py2neo.org/$}.
+    \item Finding the best answer for a given conversation (Confer \ref{sub:Answering}).
+\end{itemize}
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=1.1\textwidth]{./img/Archi.png}
+\end{center}
+\caption{Anna's Architecture.}
+\label{fig:Archi}
+\end{figure}
 %
 \subsection{User Interface}
 \subsubsection{Chosen technology}
@@ -95,35 +123,6 @@ Our app is called through R interpreter, which launches the User Interface. Then
 \label{fig:AnnaChatUI}
 \end{figure}
 
-\subsection{Architecture}
-\label{sub:Architecture}
-
-If we take a look at Figure~\ref{fig:Archi}, we can see that the responsibilities given to R and Python are not the same.
-R is in charge of :
-\begin{itemize}
-    \item The User Interface, both for the cosmetic and the behavioural part.
-    These components will also be responsible for calling Python API through an elegant R API, thanks to the library \textit{rPython\footnote{$rpython.r-forge.r-project.org/$}}.
-    \item Building the statistics on the new data we get on the web.
-    For that matter, we use built-in R, as well as \textit{ggplot2\footnote{$ggplot2.org/$}} library.
-    For cooccurrences graphs, we build cooccurrence matrices, that we read and display with Gephi\footnote{$gephi.github.io/$}.
-    \item Taking into account the user's evaluations\footnote{In a later version.}.
-\end{itemize}
-
-On the other hand, Python is in charge of :
-\begin{itemize}
-    \item Retrieving information about the movies through OMDb API\footnote{$www.omdbapi.com/$}.
-    \item Parsing the XML dataset\footnote{$docs.python.org/2/library/xml.html$} to build the neo4j graphbase\footnote{$py2neo.org/$}.
-    \item Finding the best answer for a given conversation (Confer \ref{sub:Answering}).
-\end{itemize}
-
-\begin{figure}[!h]
-\begin{center}
-\includegraphics[width=1.1\textwidth]{./img/Archi.png}
-\end{center}
-\caption{Anna's Architecture.}
-\label{fig:Archi}
-\end{figure}
-
 %
 \subsection{Anna's answers}
 \label{sub:Answering}
@@ -160,12 +159,13 @@ Figure \ref{fig:stats} displays a 3-depth graph of probabilities in which we can
 Then when Anna is speaking with an user we use these statistics to answer a sentence whose type is the most likely to occur given the types of the previous sentences in the dialogue. It results on conversations which are correctly structured. See figure \ref{fig:convST} for a creepy example.
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=0.80\textwidth]{./img/convST.png}
+\includegraphics[width=0.70\textwidth]{./img/convST.png}
 \end{center}
 \caption{Conversation from V2}
 \label{fig:convST}
 \end{figure}
 
+\newpage
 \subsubsection{Version 3 : Determined movie genre}
 \label{sssec:v_genre}
 This version propose a new feature which allows the user to choose which kind of movie should be queried by Anna. The movies' categories have been added to the dataset through the OMDb API, see \ref{ssec:enrich} for more details about the API and the enrichment process.\\
@@ -210,7 +210,7 @@ But we thought it was important to separate the grammatical identification of th
 \label{ssub:version_5_tokens_frequency}
 The last version we implemented make use of the tokens frequency in the historic sub-graph. We first compute a distribution of the tokens with a Part-of-speech tag of \say{NN*}. It means that we consider :
 \begin{description}
-    \item[NN] Noun, singular or mass 
+    \item[NN] Noun, singular or mass
     \item[NNS] Noun, plural
     \item[NNP] Proper noun, singular
     \item[NNPS] Proper noun, plural

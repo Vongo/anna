@@ -5,7 +5,14 @@ import db;
 # Take a sentence and return relevant tokens, the type of the sentence  
 # and proper names
 def getTokensAndType(sentence):
+	"""
+    Take a sentence and return relevant tokens, the type of the sentence and proper names
 
+    @type  sentence: string
+    @param sentence: The sentence
+
+    @return: A list containing the sentence's tokens, types and proper nouns
+    """	
 	allTokens = nltk.word_tokenize(sentence) # tokenize the sentence
 	tagged = nltk.pos_tag(allTokens) # Tag the tokens
 

@@ -5,7 +5,17 @@ MYSELF_COMP_IDS = [["I", "am"]] # The locutor can be speaking about his name, bu
 # Splits a sentence (represented as a list of words and symbols) in two parts around a keyword or a keysign.
 # Returns the two parts. Note that the key mentioned above disappears from the sentence.
 def splitOnKeyword(proposition, keyword):
-    #print "splitOnKeyword :", proposition, keyword
+    """
+    Splits a sentence (represented as a list of words and symbols) in two parts around a keyword or a keysign.
+
+    @type  proposition: list
+    @param proposition: The sentence as a list of words and symbols
+    
+    @type  keyword: char
+    @param keyword: The separator
+
+    @return: Two lists, before the separator and after it.
+    """ 
     before = []
     after = []
     weAreBefore = True
@@ -21,6 +31,20 @@ def splitOnKeyword(proposition, keyword):
 
 # In a sentence (represented as a list of words and symbols), replaces the first occurrence of the symbol "de" by the symbol "to".
 def replaceWith(proposition, de, vers):
+    """
+    In a sentence (represented as a list of words and symbols), replaces the first occurrence of the symbol "de" by the symbol "to".
+
+    @type  proposition: list
+    @param proposition: The sentence as a list of words and symbols
+    
+    @type  de: string
+    @param de: The initial token
+
+    @type  vers: string
+    @param vers: The new token
+
+    @return: The modified sentence.
+    """ 
     #print "replaceWith : ", proposition, de, vers
     sentence, after = splitOnKeyword(proposition, de)
     sentence.extend([vers])
@@ -29,6 +53,17 @@ def replaceWith(proposition, de, vers):
 
 # Decides how to replace elements of "names" found in "proposition" (represented as a list of words and symbols).
 def replaceNameInProposition(names, proposition):
+    """
+    Decides how to replace elements of "names" found in "proposition" (represented as a list of words and symbols).
+    
+    @type  names: list
+    @param names: List of names
+
+    @type  proposition: list
+    @param proposition: The sentence as a list of words and symbols
+
+    @return: The modified sentence.
+    """ 
     #print "replaceNameInProposition : ", proposition
     # We check whether there are elements of "names" in the "proposition"
     for t in proposition :
@@ -62,6 +97,17 @@ def replaceNameInProposition(names, proposition):
 # Recursively splits the utterance (represented as a list of words and symbols) into naive atomic sub-propositions,
 # and properly replaces elements from "names" in each of these sub-propositions.
 def replaceNames(names, utterance):
+    """
+    Recursively splits the utterance (represented as a list of words and symbols) into naive atomic sub-propositions, and properly replaces elements from "names" in each of these sub-propositions.
+    
+    @type  names: list
+    @param names: List of names
+
+    @type  utterance: list
+    @param utterance: The utterance as a list of words and symbols
+
+    @return: The modified utterance.
+    """ 
     #print "replaceNames : ", utterance
     pP = utterance
     for t in utterance:
@@ -77,6 +123,9 @@ def replaceNames(names, utterance):
 
 # Flattens a list of list of list ... into a simple list.
 def flatten(*args):
+    """
+    Flattens a list of list of list ... into a simple list.
+    """ 
     for x in args:
         if hasattr(x, '__iter__'):
             for y in flatten(*x):
@@ -86,6 +135,17 @@ def flatten(*args):
 
 # Replaces occurrences of elements of "names" in "utterance" (represented as a list of words and symbols) by semantically appropriate Keywords
 def makeSentenceWithNames(names, utterance):
+    """
+    Replaces occurrences of elements of "names" in "utterance" (represented as a list of words and symbols) by semantically appropriate Keywords
+    
+    @type  names: list
+    @param names: List of names
+
+    @type  utterance: list
+    @param utterance: The utterance as a list of words and symbols
+
+    @return: The modified utterance.
+    """ 
     lowerNames = [x.title() for x in names]
     s_as_list = replaceNames(lowerNames, utterance)
     print s_as_list
