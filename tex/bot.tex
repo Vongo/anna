@@ -34,10 +34,6 @@ Basically we can say that in our case, one vertex equals one XML tag. Instead of
 With the above example we see that, just like in the XML (Code \ref{code:extr}), a \textbf{Movie} (pink) \textit{IS\_COMPOSED\_OF} \textbf{Dialogues} (gray, only one displayed here) which \textit{IS\_COMPOSED\_OF} several \textbf{Sentences} (green). Each sentence \textit{IS\_SPOKEN\_BY} a \textbf{Character} (purple).\\
 We store the full sentence as an attribute of the Sentence node. The labels of the dialogues and sentences are an aggregation of the id fields of their parents :
 \begin{center}Sentence\_Node\_id = idMovie\_idDialogue\_idSentence \end{center}
-Now that we have represented the corpus as a graph, we can start to work with the NLP technology. Each sentence is processed and we use the nltk library to tokenize and tag all sentences in our corpus. The purpose of the processing is to identify for each sentence its type and the most relevant tokens. These informations will be then used by anna to answer with the sentence wich is the most relevant given previous sentences.\\
-We identify four categories of sentence : interrogative, exclamative, affirmative and greeting. Moreover a sentence can be either negative or positive. To determine if a sentence is interrogative or exclamative we check the presence of a question mark (?) or a exclamation point (!) at the end of the sentence. If no such marks is found we assume that the sentence is affirmative. To determine if a sentence is negative we check if the sentence contain a \say{n't} token. Finally to detect a greeting we check if the sentence contain keywords such as \say{Hi}, \say{Hello}, \say{Good Morning}\dots\\
-Regarding the tokens we assume tokens tagged as noun and verb are the most relevant to understand the meaning of the sentence and thus we only keep these and eliminate others.\\
-The figure \ref{fig:sent} illustrate the informations stored in the database.
 
 \begin{figure}[!h]
 \begin{center}
